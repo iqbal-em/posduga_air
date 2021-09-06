@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+
+import time
+import paho.mqtt.client as paho
+import RPi.GPIO as GPIO
+broker = "192.168.88.156"
+PORT = 1883 
+
+import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(2,  GPIO.OUT) #pin Relay Modem
+GPIO.output(2, GPIO.LOW)
+
+def pwm_Publish(client,userdata,result):
+   print("data published \n")
+   pass
+
+client1 = paho.Client("client")
+
+class PWM_read:
+   def __init__(self, pi, gpio):
+      self.pi = pi
+      self.gpio = gpio
+
+      self._high_tick = None
+      self._p = None
+      self._hp = None
+
+      self._cb = pi.callback(gpio, pigpio.EITHER_EDGE, self._cbf)
+
+   def _cbf(self, gpio, level, tick):
+   
+      if level == 1:
+         if self._high_tick is not None:
+            self._p = pigpio.tickDiff(self._high_tick, tick)
+         self._high_tick = tick
+      elif level == 0:
+         if self._high_tick is not None:
+            self._hp = pigpio.tickDiff(self._high_tick, tick)
+      if (self._p is not None) and (self._hp is not None):
+         period = 1 / (1000000.0/self._p)
+         print("g={} f={:.1f} dc={:.3f} distance ={:.3f}".  
+            format(gpio, 1000000.0/self._p, self._hp , self._hp/58))
+         #client1.on_Publish = pwm_Publish
+         #client1.connect(broker,PORT)
+         #ret = client1.publish("dugaair/waterlevel",float(self._hp/58))
+
+   def cancel(self):
+      self._cb.cancel()
+
+pi = pigpio.pi()
+
+p1 = PWM_read(pi, 12)
+
+
+time.sleep(60)
+
+p1.cancel()
+p2.cancel()
+p3.cancel()
+
+pi.stop()

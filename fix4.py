@@ -18,6 +18,7 @@ import os
 
 ketinggian_air = 0
 
+response2 = os.system("sudo -S pigpiod")
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.OUT) #pin Relay Modem
@@ -26,7 +27,7 @@ GPIO.output(4, GPIO.LOW)#kondisi mati
 GPIO.setup(17, GPIO.OUT) #pin Relay Kamera
 GPIO.output(17, GPIO.LOW)#kondisi mati
 
-tinggi_sensor = 5000
+tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
@@ -35,18 +36,19 @@ siaga1 = 201
 siaga2 = 150
 siaga3 = 100
 set_millis = 0
-lvl_siaga1 = 60000
+lvl_siaga1 = 300000
 lvl_siaga2 = 300000
-lvl_siaga3 = 60000
-lvl_siaga4 = 18000000
+lvl_siaga3 = 300000
+lvl_siaga4 = 300000
 status = ""
 
-imei = "123123123"
+imei = "088298203821"
 
-url = "http://posduga.sysable.io/api/sendjsondata"
-url1 = "http://posduga.sysable.io/api/api-device-by-imei/123123123"
+url = "https://posduga.sysable.io/api/sendjsondata"
+url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203821"
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
 
 last_ketinggian_air = 0
 
@@ -55,7 +57,7 @@ def setup():
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
 
 def check_ping():
-    hostname = "192.168.100.143"
+    hostname = "192.168.1.64"
     response = os.system("ping -c 1 " + hostname)
     # and then check the response...
     if response == 0:
@@ -71,6 +73,7 @@ def check_url(hostname):
     # and then check the response...
     if response == 0 or response == 512:
         pingstatus = "Terkoneksi Ke Internet"
+        print("Terkoneksi ke Internet")
     else:
         pingstatus = "Internet Error"
         print("Trying to Route to Dns Server")
@@ -113,9 +116,9 @@ class PWM_read:
             self._hp = pigpio.tickDiff(self._high_tick, tick)
       if (self._p is not None) and (self._hp is not None):
          period = 1 / (1000000.0/self._p)
-         #ketinggian_air = tinggi_sensor - self._hp/58
+         ketinggian_air = tinggi_sensor - self._hp/58
          #print(self.tempdistance)
-         ketinggian_air = self._hp/58
+         #ketinggian_air = self._hp/58
          #print(ketinggian_air)
          #print("g={} f={:.1f} dc={:.3f} distance ={:.3f}".  
           #  format(gpio, 1000000.0/self._p, self._hp , self._hp/58))
@@ -178,11 +181,11 @@ def main():
       '''
    while True :
       current_millis = round(int(time.time() * 1000))
-      if(current_millis - data_millis) > 3600000:
+      if(current_millis - data_millis) > 300000:
           GPIO.output(4, GPIO.HIGH)#Modem hidup 
           GPIO.output(17, GPIO.HIGH)#Kamera Hidup
           print("Booting Camera and Modem 4G")
-          time.sleep(60)
+          #time.sleep(60)
           if (check_url(url1) == 0 or check_url(url1) == 512) :
               print("Update Data")
               get_data_durasi()
@@ -229,12 +232,12 @@ def main():
           GPIO.output(4, GPIO.HIGH)#Modem hidup 
           GPIO.output(17, GPIO.HIGH)#Kamera Hidup
           print("Booting Camera and Modem 4G")
-          time.sleep(120)
-          os.system('sudo route add 27.131.0.10 gw 192.168.100.1')
+          #time.sleep(120)
+          
           camera_millis = current_millis
           if (check_ping() == 0):
               time.sleep(2)
-              cam = Client('http://192.168.100.143', 'admin', 'd0d0lg4rut')
+              cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
               print("starting picture capture")
               vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
               bytes = b''
