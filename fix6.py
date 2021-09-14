@@ -266,7 +266,7 @@ def main():
           if(ketinggian_air == 10000):
               ketinggian_air_fix = last_ketinggian_air
           else:
-              if(abs(int(ketinggian_air) - last_ketinggian_air))>50 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
+              if(abs(int(ketinggian_air) - last_ketinggian_air))>30 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
                   ketinggian_air_fix = last_ketinggian_air
                   print("filter noise")
               else :
@@ -295,7 +295,7 @@ def main():
                   print("Durasi Pengiriman : " ,(set_millis/(1000*60)) ," menit")
                   print("Status : ", status)
                   print("flag_status: ", flag_status)
-                  if (flag_status != last_flag_status and last_ketinggian_air != 0):
+                  if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
                       camera_millis = current_millis
                       print("perubahan status")
                       kirim_data_full()
