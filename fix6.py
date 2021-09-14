@@ -207,7 +207,7 @@ def kirim_data_full():
     #GPIO.output(17, GPIO.LOW)#Kamera Mati   
     
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi
    pwm_millis = round(int(time.time() * 1000))
    camera_millis = round(int(time.time() * 1000))
    data_millis = round(int(time.time() * 1000))
@@ -216,8 +216,14 @@ def main():
    for i in range(10):
        p1 = PWM_read(pi, 12)
        time.sleep(1)
+       if (i == 1):
+           last_kalibrasi = ketinggian_air
+       if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)):
+           last_ketinggian_air = ketinggian_air
+           last_kalibrasi = ketinggian_air
+       
        print(int(ketinggian_air))
-
+       
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi()
