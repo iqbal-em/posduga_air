@@ -268,41 +268,39 @@ def main():
           else:
               if(abs(int(ketinggian_air) - last_ketinggian_air))>30 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
                   ketinggian_air_fix = last_ketinggian_air
-                  print("filter noise")
-              else :
-                  ketinggian_air_fix = int(ketinggian_air)
+                  print("filter noise") 
+    
+          ketinggian_air_fix = int(ketinggian_air)
 
-                  #last_ketinggian_air = int(ketinggian_air)
-                  print("Ketinggian_air :", int(ketinggian_air_fix))
-                  #print("Last_ketinggian:",int(last_ketinggian_air))
-
-                  if(int(ketinggian_air_fix) > siaga1):
-                      flag_status = 1
-                      set_millis = lvl_siaga1
-                      status =  "siaga1"
-                  elif(int(ketinggian_air_fix) > siaga2):
-                      flag_status = 2
-                      set_millis = lvl_siaga2
-                      status =  "siaga2"
-                  elif(int(ketinggian_air_fix) > siaga3):
-                      flag_status = 3
-                      set_millis = lvl_siaga3
-                      status =  "siaga3"
-                  else:
-                      flag_status = 4
-                      set_millis = lvl_siaga4
-                      status =  "siaga4"
-                  print("Durasi Pengiriman : " ,(set_millis/(1000*60)) ," menit")
-                  print("Status : ", status)
-                  print("flag_status: ", flag_status)
-                  if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
-                      camera_millis = current_millis
-                      print("perubahan status")
-                      kirim_data_full()
-
-                  last_flag_status = flag_status    
-                  last_ketinggian_air = ketinggian_air_fix 
-                  
+            #last_ketinggian_air = int(ketinggian_air)
+          print("Ketinggian_air :", int(ketinggian_air_fix))
+          #print("Last_ketinggian:",int(last_ketinggian_air))
+          if(int(ketinggian_air_fix) > siaga1):
+              flag_status = 1
+              set_millis = lvl_siaga1
+              status =  "siaga1"
+          elif(int(ketinggian_air_fix) > siaga2):
+              flag_status = 2
+              set_millis = lvl_siaga2
+              status =  "siaga2"
+          elif(int(ketinggian_air_fix) > siaga3):
+              flag_status = 3
+              set_millis = lvl_siaga3
+              status =  "siaga3"
+          else:
+              flag_status = 4
+              set_millis = lvl_siaga4
+              status =  "siaga4"
+              print("Durasi Pengiriman : " ,(set_millis/(1000*60)) ," menit")
+              print("Status : ", status)
+              print("flag_status: ", flag_status)
+          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
+              camera_millis = current_millis
+              print("perubahan status")
+              kirim_data_full()
+              last_flag_status = flag_status    
+              last_ketinggian_air = ketinggian_air_fix 
+            
           
       if (current_millis - camera_millis > set_millis) :
 
