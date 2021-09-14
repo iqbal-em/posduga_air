@@ -17,7 +17,7 @@ import json
 import os
 
 ketinggian_air = 0
-
+last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod")
 
 GPIO.setmode(GPIO.BCM)
