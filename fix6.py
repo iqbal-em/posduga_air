@@ -118,7 +118,8 @@ class PWM_read:
             self._hp = pigpio.tickDiff(self._high_tick, tick)
       if (self._p is not None) and (self._hp is not None):
           period = 1 / (1000000.0/self._p)
-          if ((int(self._p) != 0) and (int(self.p)<tinggi_sensor)):
+          
+          if ((int(self._hp/58) != 0) and (int(self._hp/58)<tinggi_sensor)):
               ketinggian_air = tinggi_sensor - self._hp/58
           else:
               ketinggian_air = 10000

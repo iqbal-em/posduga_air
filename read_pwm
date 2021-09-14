@@ -53,7 +53,7 @@ pi = pigpio.pi()
 p1 = PWM_read(pi, 12)
 
 
-time.sleep(60)
+time.sleep(3600)
 
 p1.cancel()
 p2.cancel()
