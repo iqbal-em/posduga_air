@@ -77,7 +77,7 @@ def check_ping():
 
 def check_url(hostname):
     response = os.system("ping -c 1 " + hostname)
-    print("response url :", + str(response))
+    print("response url :" + str(response))
     if response == 0 or response == 512:
         pingstatus = "Terkoneksi Ke Internet"
         #print("Terkoneksi ke Internet")
