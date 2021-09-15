@@ -172,6 +172,7 @@ def get_data_durasi():
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
         lastupdate = data['last_update']
         lastupdate_jam = lastupdate[11:19]
+        kirim_data_full()
     except requests.exceptions.ConnectionError:
         
         print(r)
