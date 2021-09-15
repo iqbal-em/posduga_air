@@ -203,7 +203,7 @@ def kirim_data_full():
                   #cv2.imshow('i', i)
     else :
       print("CCTV NOT DETECTED")
-      
+        
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
@@ -214,9 +214,11 @@ def kirim_data_full():
           dump = " "
           response = kirim_data(int(ketinggian_air_fix),buffer_img)
           print(response)
+    else :
+        print("No Internet")
     jadwal_pengiriman = response
-    else:
-      print("No Internet")
+
+      
 
     #GPIO.output(4, GPIO.LOW)#Modem Mati 
     #GPIO.output(17, GPIO.LOW)#Kamera Mati   
@@ -246,13 +248,12 @@ def main():
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
        print("Current Time : " + current_time)
-       print("jadwal Pengiriman:"+ jadwal pengiriman)
+       print("jadwal Pengiriman:"+ jadwal_pengiriman)
        if (current_time == jadwal_pengiriman):
            p1 = PWM_read(pi, 12)
            time.sleep(1)
            #print("Real Ketinggian_air :", int(ketinggian_air))
            # #filter noise sensor
-           pwm_millis = current_millis
            p1.cancel()
            if(ketinggian_air == 10000):
                ketinggian_air_fix = last_ketinggian_air
