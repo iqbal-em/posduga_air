@@ -67,7 +67,7 @@ def check_ping():
     hostname = "192.168.1.64"
     response = os.system("ping -c 1 " + hostname)
     # and then check the response...
-    print("check ping : " + response)
+    print("check ping : " + str(response))
     if response == 0 or response == 512 :
         pingstatus = "Kamera Dapat Tersambung"
     else:
@@ -77,7 +77,7 @@ def check_ping():
 
 def check_url(hostname):
     response = os.system("ping -c 1 " + hostname)
-    print("response url :", + response)
+    print("response url :", + str(response))
     if response == 0 or response == 512:
         pingstatus = "Terkoneksi Ke Internet"
         #print("Terkoneksi ke Internet")
