@@ -264,7 +264,7 @@ def main():
                    ketinggian_air_fix = last_ketinggian_air
                    print("filter noise") 
                else :
-                   ketinggian_air_fix = int(ketinggian_air)
+                   ketinggian_air_fix = int(ketinggian_air) 
            last_ketinggian_air = ketinggian_air_fix 
            kirim_data_full()
    
