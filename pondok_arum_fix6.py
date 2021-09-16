@@ -254,6 +254,9 @@ def main():
           if(abs(int(ketinggian_air) - last_ketinggian_air))>50 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
               ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
+          else :
+              ketinggian_air_fix = ketinggian_air
+
 
           #last_ketinggian_air = int(ketinggian_air)
           print("Ketinggian_air :", ketinggian_air_fix)
