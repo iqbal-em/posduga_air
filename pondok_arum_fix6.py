@@ -17,6 +17,7 @@ import json
 import os
 
 ketinggian_air = 0
+ketinggian_air_fix = 0
 
 response2 = os.system("sudo -S pigpiod")
 
@@ -202,7 +203,7 @@ def kirim_data_full():
     #GPIO.output(17, GPIO.LOW)#Kamera Mati   
     
 def main():
-   global set_millis,status, ketinggian_air, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status
+   global set_millis,status, ketinggian_air, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, ketinggian_air_fix
    pwm_millis = round(int(time.time() * 1000))
    camera_millis = round(int(time.time() * 1000))
    data_millis = round(int(time.time() * 1000))
@@ -251,24 +252,24 @@ def main():
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
           if(abs(int(ketinggian_air) - last_ketinggian_air))>50 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
-              ketinggian_air = last_ketinggian_air
+              ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
 
           #last_ketinggian_air = int(ketinggian_air)
-          print("Ketinggian_air :", int(ketinggian_air))
+          print("Ketinggian_air :", ketinggian_air_fix)
           #print("Last_ketinggian:",int(last_ketinggian_air))
 
           pwm_millis = current_millis
           p1.cancel()
-          if(int(ketinggian_air) > siaga1):
+          if(ketinggian_air_fix > siaga1):
               flag_status = 1
               set_millis = lvl_siaga1
               status =  "siaga1"
-          elif(int(ketinggian_air) > siaga2):
+          elif(ketinggian_air_fix > siaga2):
               flag_status = 2
               set_millis = lvl_siaga2
               status =  "siaga2"
-          elif(int(ketinggian_air) > siaga3):
+          elif(ketinggian_air_fix > siaga3):
               flag_status = 3
               set_millis = lvl_siaga3
               status =  "siaga3"
@@ -285,7 +286,7 @@ def main():
               kirim_data_full()
 
           last_flag_status = flag_status    
-          last_ketinggian_air = int(ketinggian_air) 
+          last_ketinggian_air = ketinggian_air_fix
       if (current_millis - camera_millis > set_millis) :
 
           camera_millis = current_millis
