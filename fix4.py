@@ -38,9 +38,9 @@ siaga2 = 150
 siaga3 = 100
 set_millis = 0
 lvl_siaga1 = 300000
-lvl_siaga2 = 300000
-lvl_siaga3 = 300000
-lvl_siaga4 = 300000
+lvl_siaga2 = 1800000
+lvl_siaga3 = 3600000
+lvl_siaga4 = 21600000
 status = ""
 
 imei = "088298203821"
