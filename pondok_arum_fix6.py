@@ -118,7 +118,7 @@ class PWM_read:
             self._hp = pigpio.tickDiff(self._high_tick, tick)
       if (self._p is not None) and (self._hp is not None):
          period = 1 / (1000000.0/self._p)
-         ketinggian_air = tinggi_sensor - self._hp/58
+         ketinggian_air = int(tinggi_sensor - self._hp/58)
          #print(self.tempdistance)
          #ketinggian_air = self._hp/58
          #print(ketinggian_air)
@@ -251,7 +251,7 @@ def main():
           time.sleep(1)
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
-          if(abs(int(ketinggian_air) - last_ketinggian_air))>50 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
+          if(abs(ketinggian_air) - last_ketinggian_air))>50 and last_ketinggian_air != 0 and ketinggian_air != 0:
               ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
           else :
