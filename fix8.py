@@ -260,7 +260,7 @@ def main():
            if(ketinggian_air == 10000):
                ketinggian_air_fix = last_ketinggian_air
            else:
-               if(abs(int(ketinggian_air) - last_ketinggian_air))>30 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
+               if(abs(int(ketinggian_air) - last_ketinggian_air))>40 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
                    ketinggian_air_fix = last_ketinggian_air
                    print("filter noise") 
                else :

@@ -251,7 +251,7 @@ def main():
           time.sleep(1)
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
-          if(abs(ketinggian_air) - last_ketinggian_air>50 and last_ketinggian_air != 0 and ketinggian_air != 0):
+          if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
               ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
           else :
