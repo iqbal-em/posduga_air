@@ -144,7 +144,8 @@ def kirim_data(data,img):
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         r.close()
     except requests.exceptions.ConnectionError:
-        print("tes")
+        print("Koneksi Error")
+        #print("tes")
         #get_data_durasi()
 
 def get_data_durasi():
