@@ -140,7 +140,7 @@ def kirim_data(data,img):
         img = "data:image/png;base64," + str(img)
     else :
         img = " "
-    r = requests.post(url, data=json.dumps(data_fix), headers=headers)
+    r = requests.post(url, data=json.dumps(data), headers=headers)
     r.close()
     return r
 
@@ -187,11 +187,11 @@ def kirim_data_full():
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
       if(check_ping()) == 0 :
-          response = kirim_data(int(ketinggian_air),buffer_img)
+          response = kirim_data(ketinggian_air_fix,buffer_img)
           print(response)
       else :
           dump = " "
-          response = kirim_data(int(ketinggian_air),buffer_img)
+          response = kirim_data(ketinggian_air_fix,buffer_img)
           print(response)
 
     else:
