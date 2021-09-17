@@ -178,7 +178,7 @@ def main():
    
    while True :
       current_millis = round(int(time.time() * 1000))
-      if(current_millis - data_millis) > 60000:
+      if(current_millis - data_millis) > 600000:
           GPIO.output(4, GPIO.HIGH)#Modem hidup 
           GPIO.output(17, GPIO.HIGH)#Kamera Hidup
           print("Booting Camera and Modem 4G")
