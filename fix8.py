@@ -187,7 +187,7 @@ def kirim_data_full():
     #time.sleep(120)
     #os.system('sudo route add 27.131.0.10 gw 192.168.100.1')
     if (check_ping() == 0):
-      time.sleep(2)
+        time.sleep(2)
       cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
       print("starting picture capture")
       vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
@@ -240,7 +240,7 @@ def main():
        if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)):
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
-       
+           
        print(int(ketinggian_air))
        
    if (check_url(url1) == 0 or check_url(url1) == 512) :
@@ -262,7 +262,7 @@ def main():
            else:
                if(abs(int(ketinggian_air) - last_ketinggian_air))>40 and last_ketinggian_air != 0 and int(ketinggian_air) != 0:
                    ketinggian_air_fix = last_ketinggian_air
-                   print("filter noise") 
+                   print("filter noise")
                else :
                    ketinggian_air_fix = int(ketinggian_air) 
            last_ketinggian_air = ketinggian_air_fix 

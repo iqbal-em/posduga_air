@@ -139,22 +139,27 @@ def kirim_data(data,img):
         img = "data:image/png;base64," + str(img)
     else :
         img = " "
-    
-    r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-    r.close()
-    return r
+    try:
+        r = requests.post(url, data=json.dumps(data), headers=headers)
+        r.close()
+    except requests.exceptions.ConnectionError:
+        print(r)
+        #get_data_durasi()
 
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
-    r =  requests.get(url=url1)
-    data = r.json()
-    siaga1 = data['data'][0]['siaga']['min_siaga_1']
-    siaga2 = data['data'][0]['siaga']['min_siaga_2']
-    siaga3 = data['data'][0]['siaga']['min_siaga_3']
-    lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000
-    lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
-    lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
-    lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
+    try :
+        r =  requests.get(url=url1)
+        data = r.json()
+        siaga1 = data['data'][0]['siaga']['min_siaga_1']
+        siaga2 = data['data'][0]['siaga']['min_siaga_2']
+        siaga3 = data['data'][0]['siaga']['min_siaga_3']
+        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000
+        lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
+        lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
+        lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
+    except requests.exceptions.ConnectionError:
+        print(r)
     
     
 def main():
@@ -252,12 +257,11 @@ def main():
           if(check_url(hostname) == 0 or check_url(hostname) == 512):
               buffer_img = compress_img('img.png')
               if(check_ping()) == 0 :
-                  response = kirim_data(int(ketinggian_air),buffer_img)
+                  response = kirim_data(ketinggian_air_fix,buffer_img)
                   print(response)
               else :
-                  
                   dump = " "
-                  response = kirim_data(int(ketinggian_air),buffer_img)
+                  response = kirim_data(ketinggian_air_fix,buffer_img)
                   print(response)
           
           else:
