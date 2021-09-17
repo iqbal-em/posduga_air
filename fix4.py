@@ -140,10 +140,11 @@ def kirim_data(data,img):
     else :
         img = " "
     try:
-        r = requests.post(url, data=json.dumps(data), headers=headers)
+        data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei}
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         r.close()
     except requests.exceptions.ConnectionError:
-        print(r)
+        print("tes")
         #get_data_durasi()
 
 def get_data_durasi():
@@ -158,6 +159,7 @@ def get_data_durasi():
         lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
         lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
+
     except requests.exceptions.ConnectionError:
         print(r)
     
@@ -176,7 +178,7 @@ def main():
    
    while True :
       current_millis = round(int(time.time() * 1000))
-      if(current_millis - data_millis) > 300000:
+      if(current_millis - data_millis) > 60000:
           GPIO.output(4, GPIO.HIGH)#Modem hidup 
           GPIO.output(17, GPIO.HIGH)#Kamera Hidup
           print("Booting Camera and Modem 4G")
