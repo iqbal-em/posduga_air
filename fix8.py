@@ -168,6 +168,7 @@ def kirim_data(data,img, waktu, tanggal):
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
         status = str(data['status'])
+        print(data)
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
         r.close()
         if (status == "500"):
