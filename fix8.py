@@ -238,6 +238,7 @@ def kirim_data_full():
           dump = " "
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
+      print("Full response" , response.__dict__)
     else :
         print("No Internet")
     jadwal_pengiriman = response
