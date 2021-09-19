@@ -166,7 +166,7 @@ def kirim_data(data,img, waktu, tanggal):
         
         data = r.__dict__['_content']
         data = json.loads(data)
-        jadwal_pengiriman = str(data['next_schedule_sent_data'])
+        jadwal_pengiriman = str(data['next_schedule_sentdata'])
         status = str(data['status'])
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
         r.close()
