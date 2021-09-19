@@ -254,12 +254,13 @@ def main():
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
-       print("Current Time : " + current_time)
+       
        date = datetime.datetime.now().date()
 
        if (current_millis - pwm_millis) > 10000 :
           p1 = PWM_read(pi, 12)
           time.sleep(1)
+          print("Current Time : " + current_time)
 
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
