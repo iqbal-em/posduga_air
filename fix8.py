@@ -163,7 +163,7 @@ def kirim_data(data,img, waktu, tanggal):
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
         
-        data = r.__dict__['_content'][0]['status']
+        data = r.__dict__['_content']
         print("Cek response", type(data))
         r.close()
     except requests.exceptions.ConnectionError:
