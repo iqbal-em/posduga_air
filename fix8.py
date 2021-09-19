@@ -220,6 +220,7 @@ def kirim_data_full():
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
       if(check_ping()) == 0 :
+          print(current_time, date)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       else :
