@@ -228,7 +228,7 @@ def kirim_data_full():
           print("woy")
           print(current_time, date)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
-          print(response)
+          print("Response :" + response)
       else :
           dump = " "
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
