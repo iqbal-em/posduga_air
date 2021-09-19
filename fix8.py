@@ -16,7 +16,7 @@ import requests
 import json
 import os
 import time
-
+import ast
 
 
 ketinggian_air = 0
@@ -164,7 +164,8 @@ def kirim_data(data,img, waktu, tanggal):
         
         
         data = r.__dict__['_content']
-        print("Cek response", type(data))
+        fix = ast.literal_eval(data.decode('utf-8'))
+        print("Cek response", fix)
         r.close()
     except requests.exceptions.ConnectionError:
         print(r)
