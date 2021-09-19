@@ -161,7 +161,9 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-        print("Cek response", r.__dict__)
+        
+        data = r.__dict__.json()
+        print("Cek response", data)
         r.close()
     except requests.exceptions.ConnectionError:
         print(r)
