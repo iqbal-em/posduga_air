@@ -184,7 +184,7 @@ def get_data_durasi():
         jadwal_pengiriman = lastupdate[11:19]
         print("Jadwal Pengiriman :" + jadwal_pengiriman)
         #jadwal_pengiriman = (data['data'][0]['siaga']['updated_at'])
-        kirim_data_full()
+        #kirim_data_full()
     except requests.exceptions.ConnectionError:
         
         print(r)
