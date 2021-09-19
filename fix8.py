@@ -190,7 +190,12 @@ def get_data_durasi():
 def kirim_data_full():
     #GPIO.output(4, GPIO.HIGH)#Modem hidup 
     #GPIO.output(17, GPIO.HIGH)#Kamera Hidup
-    global jadwal_pengiriman
+    global jadwal_pengiriman, current_time, date
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+       
+    date = datetime.datetime.now().date()
+
     print("Booting Camera and Modem 4G")
     #time.sleep(120)
     #os.system('sudo route add 27.131.0.10 gw 192.168.100.1')
