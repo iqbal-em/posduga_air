@@ -164,7 +164,7 @@ def kirim_data(data,img, waktu, tanggal):
         
         
         data = r.__dict__['_content']
-        data = data[0: 1]
+        data = data[2: data(len)-1]
         #dict_str = data.decode("UTF-8")
         #fix = ast.literal_eval(dict_str.decode('utf-8'))
         print("Cek response", data)
