@@ -164,7 +164,7 @@ def kirim_data(data,img, waktu, tanggal):
         
         
         data = r.__dict__['_content'][0]['status']
-        print("Cek response", data)
+        print("Cek response", type(data))
         r.close()
     except requests.exceptions.ConnectionError:
         print(r)
