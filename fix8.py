@@ -167,7 +167,7 @@ def kirim_data(data,img, waktu, tanggal):
         data = json.loads(data)
         #dict_str = data.decode("UTF-8")
         #fix = ast.literal_eval(dict_str.decode('utf-8'))
-        print("Cek response", data)
+        print("Cek response", data['status'])
         r.close()
     except requests.exceptions.ConnectionError:
         print(r)
