@@ -66,6 +66,10 @@ def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
 
+def converter_json(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
 def check_ping():
     hostname = "192.168.1.64"
     response = os.system("ping -c 1 " + hostname)
@@ -152,7 +156,7 @@ def kirim_data(data,img, waktu, tanggal):
         img = "data:image/png;base64," + str(img)
     else :
         img = " "
-    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":converter_json(waktu), "tanggal":converter_json(tanggal) }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         r.close()
