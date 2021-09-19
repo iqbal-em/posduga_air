@@ -262,7 +262,7 @@ def main():
            last_kalibrasi = ketinggian_air
            
        print(ketinggian_air)
-       print(last_ketinggian_air)
+       #print(last_ketinggian_air)
        
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
@@ -317,11 +317,11 @@ def main():
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
               camera_millis = current_millis
               print("perubahan status")
-              kirim_data_full()
+              #kirim_data_full()
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
             
-          kirim_data_full()
+         # kirim_data_full()
     
        if (current_time == lastupdate_jam):
            kirim_data_full()
