@@ -128,7 +128,7 @@ class PWM_read:
           period = 1 / (1000000.0/self._p)
           
           if ((int(self._hp/58) != 0) and (int(self._hp/58)<tinggi_sensor)):
-              ketinggian_air = tinggi_sensor - self._hp/58
+              ketinggian_air = int(tinggi_sensor - self._hp/58)
           else:
               ketinggian_air = 10000
          #print(self.tempdistance)
@@ -245,7 +245,7 @@ def main():
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
            
-       print(int(ketinggian_air))
+       print(ketinggian_air)
        
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
@@ -304,6 +304,7 @@ def main():
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
             
+          kirim_data_full()
     
        if (current_time == lastupdate_jam):
            kirim_data_full()
