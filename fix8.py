@@ -156,7 +156,7 @@ def kirim_data(data,img, waktu, tanggal):
         img = "data:image/png;base64," + str(img)
     else :
         img = " "
-    print("waktu :" + converter_json(waktu))
+    
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":converter_json(waktu), "tanggal":converter_json(tanggal) }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
@@ -229,6 +229,7 @@ def kirim_data_full():
       if(check_ping()) == 0 :
           print("woy")
           print(current_time, date)
+          print("waktu :" + converter_json(current_time))
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print("Response :" + response)
       else :
