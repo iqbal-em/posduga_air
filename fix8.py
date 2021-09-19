@@ -228,8 +228,9 @@ def kirim_data_full():
       buffer_img = compress_img('img.png')
       if(check_ping()) == 0 :
           print("woy")
-          print(current_time, date)
           print("waktu :" + converter_json(current_time))
+          print(current_time, date)
+          
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print("Response :" + response)
       else :
