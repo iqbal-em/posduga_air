@@ -164,7 +164,8 @@ def kirim_data(data,img, waktu, tanggal):
         
         
         data = r.__dict__['_content']
-        fix = ast.literal_eval(data.decode('utf-8'))
+        dict_str = data.decode("UTF-8")
+        fix = ast.literal_eval(dict_str.decode('utf-8'))
         print("Cek response", fix)
         r.close()
     except requests.exceptions.ConnectionError:
