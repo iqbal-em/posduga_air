@@ -228,7 +228,7 @@ def kirim_data_full():
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
       if(check_ping()) == 0 :
-          print("woy")
+          
           #print("waktu :" + converter_json(current_time))
           
           
