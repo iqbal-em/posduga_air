@@ -157,7 +157,7 @@ def kirim_data(data,img, waktu, tanggal):
     else :
         img = " "
     
-    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":converter_json(waktu), "tanggal":converter_json(tanggal) }
+    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":str(waktu), "tanggal":str(tanggal) }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         print(r)
