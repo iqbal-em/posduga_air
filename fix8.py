@@ -151,6 +151,7 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
+    global jadwal_pengiriman
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img)
     else :
@@ -165,13 +166,19 @@ def kirim_data(data,img, waktu, tanggal):
         
         data = r.__dict__['_content']
         data = json.loads(data)
-        #dict_str = data.decode("UTF-8")
-        #fix = ast.literal_eval(dict_str.decode('utf-8'))
-        print("Cek response", data['status'])
+        jadwal_pengiriman = str(data['next_schedule_sent_data'])
+        status = str(data['status'])
+        print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
         r.close()
+        if (status == "500"):
+            print("Data Dikirim Ulang")
+            kirim_data
+
     except requests.exceptions.ConnectionError:
         print(r)
         get_data_durasi()
+    
+    
 
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman
