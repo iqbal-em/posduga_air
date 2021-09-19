@@ -161,7 +161,7 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":str(waktu), "tanggal":str(tanggal) }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-        print(r)
+        print("Cek response", r.__dict__)
         r.close()
     except requests.exceptions.ConnectionError:
         print(r)
@@ -238,7 +238,7 @@ def kirim_data_full():
           dump = " "
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
-      print("Full response" , response.__dict__)
+      #print("Full response" , response.__dict__)
     else :
         print("No Internet")
     jadwal_pengiriman = response
