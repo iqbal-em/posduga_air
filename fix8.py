@@ -151,7 +151,8 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
-    
+    print(waktu, tanggal)
+    print("tes")
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img)
     else :
@@ -229,10 +230,10 @@ def kirim_data_full():
       if(check_ping()) == 0 :
           print("woy")
           #print("waktu :" + converter_json(current_time))
-          print(current_time, date)
+          
           
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
-          print("Response :" + response)
+          #print("Response :" + response)
       else :
           dump = " "
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
