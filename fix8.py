@@ -290,7 +290,9 @@ def main():
        
        date = datetime.datetime.now().date()
 
+
        if (current_millis - pwm_millis) > 10000 :
+          print(jadwal_pengiriman)
           p1 = PWM_read(pi, 12)
           time.sleep(1)
           print("Current Time : " + current_time)
@@ -333,13 +335,13 @@ def main():
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
               camera_millis = current_millis
               print("perubahan status")
-              #kirim_data_full()
+              kirim_data_full()
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
             
-          kirim_data_full()
-    
-       if (current_time == lastupdate_jam):
+  
+
+       if (current_time == jadwal_pengiriman):
            kirim_data_full()
    
          
