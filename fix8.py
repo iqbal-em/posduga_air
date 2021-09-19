@@ -151,16 +151,16 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
-    print(waktu, tanggal)
-    print("tes")
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img)
     else :
         img = " "
     #data=json.dumps
-    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":str(waktu), "tanggal":str(tanggal) }
+    waktu = "" + str(waktu)
+    tanggal = "" + str(tanggal)
+    data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     try:
-        r = requests.post(url, data_fix, headers=headers)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         print("Cek response", r.__dict__)
         r.close()
     except requests.exceptions.ConnectionError:
