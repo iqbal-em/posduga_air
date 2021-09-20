@@ -1,6 +1,6 @@
-#penambahan fitur relay
 
-    
+
+from __future__ import print_function 
 import time, sys
 import cv2
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
@@ -17,7 +17,7 @@ import json
 import os
 import time
 import ast
-from __future__ import print_function
+
 
 
 ketinggian_air = 0
