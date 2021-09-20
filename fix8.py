@@ -160,6 +160,7 @@ def kirim_data(data,img, waktu, tanggal):
     #data=json.dumps
     waktu = "" + str(waktu)
     tanggal = "" + str(tanggal)
+    print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
