@@ -246,7 +246,7 @@ def kirim_data_full():
       print("CCTV NOT DETECTED")
 
     
-    print("Ketinggian_air_fix",ketinggian_air_fix)
+    
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
@@ -286,9 +286,9 @@ def main():
            last_kalibrasi = ketinggian_air
            ketinggian_air_fix = ketinggian_air
            
-       print(ketinggian_air)
+       print("Ketinggian_air_fix",ketinggian_air_fix)
        #print(last_ketinggian_air)
-       
+   print(ketinggian_air_fix)   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi()
