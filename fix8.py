@@ -17,6 +17,7 @@ import json
 import os
 import time
 import ast
+from __future__ import print_function
 
 
 ketinggian_air = 0
@@ -179,6 +180,10 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         get_data_durasi()
     
+    with open('/var/tmp/testing.log', 'a') as fp:
+        print(data, 'done', file=fp)
+        print(time.time(), 'done', file=fp)
+        time.sleep(2)
     
 
 def get_data_durasi():
