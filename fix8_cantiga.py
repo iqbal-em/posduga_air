@@ -1,6 +1,6 @@
-#penambahan fitur relay
 
-    
+
+from __future__ import print_function 
 import time, sys
 import cv2
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
@@ -17,7 +17,8 @@ import json
 import os
 import time
 import ast
-from __future__ import print_function
+
+
 
 ketinggian_air = 0
 last_kalibrasi = 0
@@ -159,7 +160,11 @@ def kirim_data(data,img, waktu, tanggal):
     #data=json.dumps
     waktu = "" + str(waktu)
     tanggal = "" + str(tanggal)
+    print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+    with open('/var/tmp/data.log', 'a') as fp:
+        print(data_fix, 'done', file=fp)
+        time.sleep(2)
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
@@ -167,22 +172,27 @@ def kirim_data(data,img, waktu, tanggal):
         data = r.__dict__['_content']
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
+        jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
         status = str(data['status'])
         print(data)
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
         r.close()
         if (status == "500"):
             print("Data Dikirim Ulang")
-            kirim_data
+            kirim_data_full()
 
     except requests.exceptions.ConnectionError:
         print(r)
         get_data_durasi()
     
+    with open('/var/tmp/testing.log', 'a') as fp:
+        print(data, 'done', file=fp)
+        print(waktu,tanggal, 'done', file=fp)
+        time.sleep(2)
     
 
 def get_data_durasi():
-    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman
+    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
     try : 
         r =  requests.get(url=url1)
         data = r.json()
@@ -195,8 +205,8 @@ def get_data_durasi():
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
         lastupdate = data['last_update']
-        jadwal_pengiriman = lastupdate[11:19]
-        print("Jadwal Pengiriman :" + jadwal_pengiriman)
+        #jadwal_pengiriman = lastupdate[11:19]
+        #print("Jadwal Pengiriman :" + jadwal_pengiriman)
         #jadwal_pengiriman = (data['data'][0]['siaga']['updated_at'])
         kirim_data_full()
     except requests.exceptions.ConnectionError:
@@ -207,7 +217,8 @@ def get_data_durasi():
 def kirim_data_full():
     #GPIO.output(4, GPIO.HIGH)#Modem hidup 
     #GPIO.output(17, GPIO.HIGH)#Kamera Hidup
-    global jadwal_pengiriman, current_time, date
+    global  current_time, date
+    print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
        
@@ -237,7 +248,7 @@ def kirim_data_full():
       print("CCTV NOT DETECTED")
 
     
-
+    
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
@@ -275,15 +286,14 @@ def main():
        if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)):
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
-           
-       print(ketinggian_air)
-       #print(last_ketinggian_air)
-       
+           ketinggian_air_fix = ketinggian_air
+       print(last_ketinggian_air)   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi()
 
    while True :
+       global jadwal_pengiriman
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
@@ -341,7 +351,7 @@ def main():
             
   
 
-       if (current_time == jadwal_pengiriman):
+       if (str(current_time) == jadwal_pengiriman):
            kirim_data_full()
    
          
