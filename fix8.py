@@ -349,7 +349,9 @@ def main():
               kirim_data_full()
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
-            
+          with open('/var/tmp/data_sensor.log', 'a') as fp:
+              print(ketinggian_air_fix, current_time, date, 'done', file=fp)
+              time.sleep(1)
   
 
        if (str(current_time) == jadwal_pengiriman):
