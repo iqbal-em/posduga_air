@@ -251,9 +251,8 @@ def kirim_data_full():
     
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
-      buffer_img = compress_img('img.png')
       if(check_ping()) == 0 :
-          
+          buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
           
           
@@ -261,7 +260,7 @@ def kirim_data_full():
           #print("Response :" + response)
       else :
           dump = " "
-          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+          response = kirim_data(ketinggian_air_fix,dump,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
     else :
