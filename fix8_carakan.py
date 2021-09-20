@@ -287,7 +287,7 @@ def main():
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
            ketinggian_air_fix = ketinggian_air
-       print(last_ketinggian_air)   
+       print(ketinggian_air)   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi()
