@@ -174,7 +174,7 @@ def kirim_data(data,img, waktu, tanggal):
         r.close()
         if (status == "500"):
             print("Data Dikirim Ulang")
-            kirim_data
+            kirim_data_full()
 
     except requests.exceptions.ConnectionError:
         print(r)
