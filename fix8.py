@@ -216,7 +216,8 @@ def get_data_durasi():
 def kirim_data_full():
     #GPIO.output(4, GPIO.HIGH)#Modem hidup 
     #GPIO.output(17, GPIO.HIGH)#Kamera Hidup
-    global jadwal_pengiriman, current_time, date, ketinggian_air_fix
+    global jadwal_pengiriman, current_time, date
+    print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
        
@@ -285,8 +286,6 @@ def main():
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
            ketinggian_air_fix = ketinggian_air
-           
-       print("Ketinggian_air_fix",ketinggian_air_fix)
        #print(last_ketinggian_air)
    print(ketinggian_air_fix)   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
