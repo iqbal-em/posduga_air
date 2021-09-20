@@ -172,6 +172,7 @@ def kirim_data(data,img, waktu, tanggal):
         data = r.__dict__['_content']
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
+        jadwal_pengiriman = jadwal_pengiriman[12:len(jadwal_pengiriman)]
         status = str(data['status'])
         print(data)
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
@@ -273,7 +274,7 @@ def kirim_data_full():
     #GPIO.output(17, GPIO.LOW)#Kamera Mati   
     
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, jadwal_pengiriman
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    pi = pigpio.pi()
