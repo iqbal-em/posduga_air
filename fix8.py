@@ -216,7 +216,7 @@ def get_data_durasi():
 def kirim_data_full():
     #GPIO.output(4, GPIO.HIGH)#Modem hidup 
     #GPIO.output(17, GPIO.HIGH)#Kamera Hidup
-    global jadwal_pengiriman, current_time, date
+    global jadwal_pengiriman, current_time, date, ketinggian_air_fix
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
        
@@ -246,7 +246,7 @@ def kirim_data_full():
       print("CCTV NOT DETECTED")
 
     
-
+    print("Ketinggian_air_fix",ketinggian_air_fix)
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       buffer_img = compress_img('img.png')
