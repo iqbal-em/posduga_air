@@ -183,7 +183,7 @@ def kirim_data(data,img, waktu, tanggal):
     
     with open('/var/tmp/testing.log', 'a') as fp:
         print(data, 'done', file=fp)
-        print(time.time(), 'done', file=fp)
+        print(waktu,tanggal, 'done', file=fp)
         time.sleep(2)
     
 
