@@ -284,6 +284,7 @@ def main():
        if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)):
            last_ketinggian_air = ketinggian_air
            last_kalibrasi = ketinggian_air
+           ketinggian_air_fix = ketinggian_air
            
        print(ketinggian_air)
        #print(last_ketinggian_air)
