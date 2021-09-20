@@ -246,6 +246,7 @@ def kirim_data_full():
                     #cv2.imshow('i', i)
     else :
       print("CCTV NOT DETECTED")
+      
 
     
     
