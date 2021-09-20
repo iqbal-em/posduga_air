@@ -17,7 +17,7 @@ import json
 import os
 import time
 import ast
-
+from __future__ import print_function
 
 ketinggian_air = 0
 last_kalibrasi = 0
