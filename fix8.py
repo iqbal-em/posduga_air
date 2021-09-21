@@ -265,9 +265,16 @@ def kirim_data_full():
           response = kirim_data(ketinggian_air_fix,dump,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
+      jadwal_pengiriman = response
     else :
-        print("No Internet")
-    jadwal_pengiriman = response
+        with open('/var/tmp/error.log', 'a') as fp:
+            current_time = time.strftime("%H:%M:%S", t)
+            date = datetime.datetime.now().date()
+            print(date,current_time,"No Internet", file=fp)
+        time.sleep(10)
+        kirim_data_full()
+        
+    
 
       
 
