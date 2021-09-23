@@ -162,9 +162,7 @@ def kirim_data(data,img, waktu, tanggal):
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-    with open('/var/tmp/data.log', 'a') as fp:
-        print(data_fix, 'done', file=fp)
-        time.sleep(2)
+    
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
@@ -180,6 +178,13 @@ def kirim_data(data,img, waktu, tanggal):
         if (status == "500"):
             print("Data Dikirim Ulang")
             kirim_data_full()
+
+        if (status == "200"):
+            with open('/var/tmp/data.log', 'a') as fp:
+                print(data_fix, 'done', file=fp)
+                time.sleep(2)
+
+
 
     except requests.exceptions.ConnectionError:
         print(r)
