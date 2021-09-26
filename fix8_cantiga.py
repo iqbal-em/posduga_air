@@ -32,7 +32,7 @@ GPIO.output(4, GPIO.LOW)#kondisi mati
 GPIO.setup(17, GPIO.OUT) #pin Relay Kamera
 GPIO.output(17, GPIO.LOW)#kondisi mati
 '''
-tinggi_sensor = 752
+tinggi_sensor = 777
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
@@ -355,6 +355,9 @@ def main():
               kirim_data_full()
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
+          else :
+              last_flag_status = flag_status
+
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, current_time, date, 'done', file=fp)
               time.sleep(1)
