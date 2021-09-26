@@ -162,9 +162,11 @@ def kirim_data(data,img, waktu, tanggal):
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+    '''
     with open('/var/tmp/data.log', 'a') as fp:
         print(data_fix, 'done', file=fp)
         time.sleep(2)
+    '''
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
@@ -358,7 +360,7 @@ def main():
               last_flag_status = flag_status  
             
           with open('/var/tmp/data_sensor.log', 'a') as fp:
-              print(ketinggian_air_fix, current_time, date, 'done', file=fp)
+              print(ketinggian_air_fix, current_time, date,flag_status, 'done', file=fp)
               time.sleep(1)
   
 

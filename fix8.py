@@ -365,7 +365,7 @@ def main():
               last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
-              print(ketinggian_air_fix, current_time, date, 'done', file=fp)
+              print(ketinggian_air_fix, current_time, date,flag_status, 'done', file=fp)
               time.sleep(1)
   
 
