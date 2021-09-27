@@ -356,6 +356,10 @@ def main():
               kirim_data_full()
               last_flag_status = flag_status    
               last_ketinggian_air = ketinggian_air_fix 
+
+              with open('/var/tmp/testing.log', 'a') as fp:
+                  print(current_time, 'Change Status', file=fp)
+                  time.sleep(1)
           else :
               last_flag_status = flag_status  
             
