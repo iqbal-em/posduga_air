@@ -162,7 +162,7 @@ def kirim_data(data,img, waktu, tanggal):
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-    '''
+    ''' 
     with open('/var/tmp/data.log', 'a') as fp:
         print(data_fix, 'done', file=fp)
         time.sleep(2)
