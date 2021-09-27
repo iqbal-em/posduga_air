@@ -355,7 +355,7 @@ def main():
               print("Status : ", status)
               print("flag_status: ", flag_status)
     
-          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
+          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               camera_millis = current_millis
               print("perubahan status")
               kirim_data_full()
