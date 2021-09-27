@@ -32,7 +32,7 @@ GPIO.output(4, GPIO.LOW)#kondisi mati
 GPIO.setup(17, GPIO.OUT) #pin Relay Kamera
 GPIO.output(17, GPIO.LOW)#kondisi mati
 '''
-tinggi_sensor = 752
+tinggi_sensor = 782
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
