@@ -322,6 +322,7 @@ def main():
 
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
+
           if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
               ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
@@ -360,12 +361,16 @@ def main():
               print("perubahan status")
               kirim_data_full()
               last_flag_status = flag_status    
-              last_ketinggian_air = ketinggian_air_fix 
+              
+
+              with open('/var/tmp/testing.log', 'a') as fp:
+                  print(current_time, 'Change Status', file=fp)
+                  time.sleep(1)
           else :
               last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
-              print(ketinggian_air_fix, current_time, date,flag_status, 'done', file=fp)
+              print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp)
               time.sleep(1)
   
 

@@ -162,10 +162,7 @@ def kirim_data(data,img, waktu, tanggal):
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-    '''with open('/var/tmp/data.log', 'a') as fp:
-        print(data_fix, 'done', file=fp)
-        time.sleep(2)
-    '''
+    
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
@@ -181,6 +178,13 @@ def kirim_data(data,img, waktu, tanggal):
         if (status == "500"):
             print("Data Dikirim Ulang")
             kirim_data_full()
+
+        if (status == "200"):
+            with open('/var/tmp/data.log', 'a') as fp:
+                print(data_fix, 'done', file=fp)
+                time.sleep(2)
+
+
 
     except requests.exceptions.ConnectionError:
         print(r)
@@ -248,10 +252,12 @@ def kirim_data_full():
     else :
       print("CCTV NOT DETECTED")
 
+
     
     
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
+
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
@@ -266,15 +272,14 @@ def kirim_data_full():
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
     else :
-    
-    
-      #print("Full response" , response.__dict__)
         with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
             print(date,current_time,"No Internet", file=fp)
         time.sleep(10)
         kirim_data_full()
+        
+    
 
       
 
@@ -317,7 +322,8 @@ def main():
 
           #print("Real Ketinggian_air :", int(ketinggian_air))
           #filter noise sensor
-          if(abs(ketinggian_air - last_ketinggian_air)>50 and last_ketinggian_air != 0 and ketinggian_air != 0 and flag_status < last_flag_status):
+
+          if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
               ketinggian_air_fix = last_ketinggian_air
               print("filter noise")
           else :
@@ -350,19 +356,22 @@ def main():
               print("Status : ", status)
               print("flag_status: ", flag_status)
     
-          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0):
+          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               camera_millis = current_millis
               print("perubahan status")
               kirim_data_full()
               last_flag_status = flag_status    
-              last_ketinggian_air = ketinggian_air_fix 
+              
+
+              with open('/var/tmp/testing.log', 'a') as fp:
+                  print(current_time, 'Change Status', file=fp)
+                  time.sleep(1)
           else :
-              last_flag_status = flag_status
+              last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
-              print(ketinggian_air_fix, current_time, date, flag_status, 'done', file=fp)
+              print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp)
               time.sleep(1)
-            
   
 
        if (str(current_time) == jadwal_pengiriman):
