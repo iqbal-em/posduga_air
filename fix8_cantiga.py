@@ -157,6 +157,7 @@ def kirim_data(data,img, waktu, tanggal):
     waktu = "" + str(waktu) 
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
+    data_tmp = data
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     
     try:
@@ -178,7 +179,7 @@ def kirim_data(data,img, waktu, tanggal):
         else :
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
-                data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data_fix, 'done', file=fp)
                 time.sleep(2)
 
