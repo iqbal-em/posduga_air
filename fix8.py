@@ -22,7 +22,7 @@ import ast
 
 ketinggian_air = 0
 last_kalibrasi = 0
-response2 = os.system("sudo -S pigpiod")
+response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
 '''
 GPIO.setmode(GPIO.BCM)
@@ -73,7 +73,7 @@ def converter_json(o):
 
 def check_ping():
     hostname = "192.168.1.64"
-    response = os.system("ping -c 1 " + hostname)
+    response = os.system("ping -c 1 " + hostname) #cek cctv
     # and then check the response...
     print("check ping : " + str(response))
     if response == 0 or response == 512 :
@@ -84,7 +84,7 @@ def check_ping():
     return response
 
 def check_url(hostname):
-    response = os.system("ping -c 1 " + hostname)
+    response = os.system("ping -c 1 " + hostname) #cek_koneksi_internet
     print("response url :" + str(response))
     if response == 0 or response == 512:
         pingstatus = "Terkoneksi Ke Internet"
@@ -99,7 +99,7 @@ def check_url(hostname):
         #print(response)
     return response
 
-def compress_img(nama_file):
+def compress_img(nama_file): #compress image
    file_name = 'image-4-compressed.jpg'
    im = Image.open(nama_file)
    im.save(file_name,optimize=True,quality=20)
@@ -111,7 +111,7 @@ def compress_img(nama_file):
 class PWM_read:
    def __init__(self, pi, gpio):
       self.pi = pi
-      self.gpio = gpio
+      self.gpio = gpio 
 
       self._high_tick = None
       self._p = None
@@ -132,33 +132,29 @@ class PWM_read:
       if (self._p is not None) and (self._hp is not None):
           period = 1 / (1000000.0/self._p)
           
-          if ((int(self._hp/58) != 0) and (int(self._hp/58)<tinggi_sensor)):
+          if ((int(self._hp/58) != 0) and (int(self._hp/58)<tinggi_sensor)): #filter jika data sensor = 0 atau lebih tinggi dari ketinggian sensor
               ketinggian_air = int(tinggi_sensor - self._hp/58)
           else:
-              ketinggian_air = 10000
-         #print(self.tempdistance)
-         #ketinggian_air = self._hp/58
-         #print(ketinggian_air)
-         #print("g={} f={:.1f} dc={:.3f} distance ={:.3f}".  
-          #  format(gpio, 1000000.0/self._p, self._hp , self._hp/58))
+              ketinggian_air = 10000 #jika nilai sensor = 0 atau sensor > ketinggian air maka nilai default 10000
+
             
    def cancel(self):
       self._cb.cancel()
       
 def convertToBinaryData(filename):
     # Convert digital data to binary format
-    with open(filename, 'rb') as file:
+    with open(filename, 'rb') as file: #Untuk memproses data CCTV
         binaryData = file.read()
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
     global jadwal_pengiriman
     if (check_ping() == 0):
-        img = "data:image/png;base64," + str(img)
+        img = "data:image/png;base64," + str(img) 
     else :
-        img = " "
+        img = " " 
     #data=json.dumps
-    waktu = "" + str(waktu)
+    waktu = "" + str(waktu) 
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -167,20 +163,22 @@ def kirim_data(data,img, waktu, tanggal):
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
         
         
-        data = r.__dict__['_content']
+        data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
-        jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
-        status = str(data['status'])
-        print(data)
-        print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman)
+        jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
+        status = str(data['status']) 
+        print(data) 
+        print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
         if (status == "500"):
             print("Data Dikirim Ulang")
-            kirim_data_full()
+            kirim_data_full() #jikda data kekirim, looping kirim data
 
-        if (status == "200"):
-            with open('/var/tmp/data.log', 'a') as fp:
+        else :
+            with open('/var/tmp/testing.log', 'a') as fp:
+                img = "data:image/png;base64," #simpan data payload
+                data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data_fix, 'done', file=fp)
                 time.sleep(2)
 
@@ -191,7 +189,7 @@ def kirim_data(data,img, waktu, tanggal):
         get_data_durasi()
     
     with open('/var/tmp/testing.log', 'a') as fp:
-        print(data, 'done', file=fp)
+        print(data, 'done', file=fp) #simpan response pengiriman 
         print(waktu,tanggal, 'done', file=fp)
         time.sleep(2)
     
@@ -209,10 +207,7 @@ def get_data_durasi():
         lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        lastupdate = data['last_update']
-        #jadwal_pengiriman = lastupdate[11:19]
-        #print("Jadwal Pengiriman :" + jadwal_pengiriman)
-        #jadwal_pengiriman = (data['data'][0]['siaga']['updated_at'])
+        lastupdate = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
         kirim_data_full()
     except requests.exceptions.ConnectionError:
         
@@ -295,15 +290,15 @@ def main():
        p1 = PWM_read(pi, 12)
        time.sleep(1)
        if (i == 0):
-           last_kalibrasi = ketinggian_air
-       if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)):
-           last_ketinggian_air = ketinggian_air
-           last_kalibrasi = ketinggian_air
-           ketinggian_air_fix = ketinggian_air
+           last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
+       if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)): #mencari nilai paling kecil dari 10 data kalibrasi
+           last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
+           last_kalibrasi = ketinggian_air 
+           ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
        print(last_ketinggian_air)   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
-       get_data_durasi()
+       get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
        global jadwal_pengiriman
@@ -314,7 +309,7 @@ def main():
        date = datetime.datetime.now().date()
 
 
-       if (current_millis - pwm_millis) > 10000 :
+       if (current_millis - pwm_millis) > 10000 : #setiap 10 detik baca data sensor untuk melakukan filtering
           print(jadwal_pengiriman)
           p1 = PWM_read(pi, 12)
           time.sleep(1)
@@ -324,11 +319,11 @@ def main():
           #filter noise sensor
 
           if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
-              ketinggian_air_fix = last_ketinggian_air
-              print("filter noise")
+              ketinggian_air_fix = last_ketinggian_air #filter jika ada data noise yang beda lebih dari 40 dari last_ketinggian_air
+              print("filter noise") #Jika iya. maka akan dilakukan filter menggunakan data sebelumnya
           else :
-              ketinggian_air_fix = ketinggian_air
-              last_ketinggian_air = ketinggian_air
+              ketinggian_air_fix = ketinggian_air #update biasa ketinggian air
+              last_ketinggian_air = ketinggian_air #update last_ketinggian_air untuk filter selanjutnya
           pwm_millis = current_millis
              
           print("Ketinggian_air :", ketinggian_air_fix)
@@ -336,7 +331,7 @@ def main():
 
           p1.cancel()
           
-          if(int(ketinggian_air_fix) > siaga1):
+          if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
               flag_status = 1
               set_millis = lvl_siaga1
               status =  "siaga1"
@@ -352,25 +347,24 @@ def main():
               flag_status = 4
               set_millis = lvl_siaga4
               status =  "siaga4"
-              print("Durasi Pengiriman : " ,(set_millis/(1000*60)) ," menit")
               print("Status : ", status)
               print("flag_status: ", flag_status)
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
-              camera_millis = current_millis
+              with open('/var/tmp/testing.log', 'a') as fp:
+                  print("Status :",flag_status, ' Status Changed', file=fp)
+                  time.sleep(1)
               print("perubahan status")
               kirim_data_full()
               last_flag_status = flag_status    
               
 
-              with open('/var/tmp/testing.log', 'a') as fp:
-                  print(current_time, 'Change Status', file=fp)
-                  time.sleep(1)
+              
           else :
               last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
-              print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp)
+              print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
   
 
