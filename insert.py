@@ -15,8 +15,9 @@ current_time = time.strftime("%H:%M:%S", t)
        
 date = datetime.datetime.now().date()
 waktu = current_time + str(date)
+print(waktu)
 curs.execute ("""INSERT INTO data
-            values(130, '/home/pi/img.png', waktu)""")
+            values(130, '/home/pi/img.png', %s)""", (waktu))
 
 db.commit()
 print ("Data committed")
