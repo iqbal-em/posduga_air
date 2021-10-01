@@ -20,8 +20,8 @@ try:
             values(130, '/home/pi/img.png', waktu)""")
 
     db.commit()
-    print "Data committed"
+    print ("Data committed")
 
 except:
-    print "Error: the database is being rolled back"
+    print ("Error: the database is being rolled back")
     db.rollback()
