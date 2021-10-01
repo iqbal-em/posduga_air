@@ -14,7 +14,7 @@ t = time.localtime()
 current_time = time.strftime("%H:%M:%S", t)
        
 date = datetime.datetime.now().date()
-waktu = current_time + str(date)
+waktu = str(date) + ' ' + current_time  
 print(waktu)
 curs.execute ("""INSERT INTO data
             values(130, '/home/pi/img.png', %s)""" %waktu)
