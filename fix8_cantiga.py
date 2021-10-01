@@ -91,8 +91,7 @@ def check_url(hostname):
         #print("Terkoneksi ke Internet")
     else:
         pingstatus = "Internet Error"
-        #print("Trying to Route to Dns Server")
-        
+        #print("Trying to Route to Dns Server")       
         time.sleep(10)
     
         response = os.system("ping -c 1 " + hostname)

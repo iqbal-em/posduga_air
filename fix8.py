@@ -271,7 +271,7 @@ def kirim_data_full():
         with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
-            print(date,current_time,"No Internet", file=fp)
+            print(date,current_time,"No I   nternet", file=fp)
         time.sleep(10)
         kirim_data_full()
         
