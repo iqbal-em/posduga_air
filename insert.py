@@ -17,7 +17,7 @@ date = datetime.datetime.now().date()
 waktu = str(date) + ' ' + current_time  
 print(waktu)
 curs.execute ("""INSERT INTO data
-            values(130, '/home/pi/img.png', %s)""" %waktu)
+            values(130, '/home/pi/img.png',getdate()""")
 
 db.commit()
 print ("Data committed")
