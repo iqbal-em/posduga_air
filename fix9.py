@@ -242,7 +242,7 @@ def cek_data_local() :
     curs=db.cursor()
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute("SELECT * FROM data where status = 0")
+    curs.execute("SELECT * FROM data where status = 1")
     db.commit()
     print(db)
     data_dict = {}
