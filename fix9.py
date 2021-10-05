@@ -274,7 +274,7 @@ def kirim_data_full():
         print("starting picture capture")
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
         bytes = b''
-        path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
+        #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
         for chunk in vid.iter_content(chunk_size=1024):
             bytes += chunk
             a = bytes.find(b'\xff\xd8')
