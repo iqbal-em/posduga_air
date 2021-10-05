@@ -17,6 +17,8 @@ import json
 import os
 import time
 import ast
+import insert
+import MySQLdb
 
 
 
@@ -24,14 +26,6 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-'''
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(4, GPIO.OUT) #pin Relay Modem
-GPIO.output(4, GPIO.LOW)#kondisi mati
-
-GPIO.setup(17, GPIO.OUT) #pin Relay Kamera
-GPIO.output(17, GPIO.LOW)#kondisi mati
-'''
 tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
@@ -52,6 +46,7 @@ imei = "088298203821"
 lastupdate_jam = ""
 url = "https://posduga.sysable.io/api/sendjsondata"
 url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203821"
+url2 = "https://posduga.sysable.io/api/sendjsondata-multiple"
 jadwal_pengiriman = ""
 current_time = ""
 date = ""
@@ -67,9 +62,6 @@ def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
 
-def converter_json(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
 
 def check_ping():
     hostname = "192.168.1.64"
@@ -184,7 +176,6 @@ def kirim_data(data,img, waktu, tanggal):
                 time.sleep(2)
 
 
-
     except requests.exceptions.ConnectionError:
         print(r)
         get_data_durasi()
@@ -194,7 +185,28 @@ def kirim_data(data,img, waktu, tanggal):
         print(waktu,tanggal, 'done', file=fp)
         time.sleep(2)
     
+def kirim_data_local_server(data_fix):
+    
+    try:
+        r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
+        
+        
+        data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
+        data = json.loads(data)
+        status = str(data['status']) 
+        print(status) 
+        r.close()
 
+
+
+    except requests.exceptions.ConnectionError:
+        print("Gagal mengirimkan Data lokal ke server")
+    
+    with open('/var/tmp/testing.log', 'a') as fp:
+        print('Kirim ulang data local', file=fp) #simpan response pengiriman 
+        print(data, 'done', file=fp) #simpan response pengiriman 
+        time.sleep(2)
+    
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
     try : 
@@ -213,11 +225,37 @@ def get_data_durasi():
     except requests.exceptions.ConnectionError:
         
         print(r)
+
+def ubah_data_local(x) :
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
+    curs=db.cursor()
+    curs.execute("update data set status = 0 where id = %s",(x))
+    #kirim data lokal
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    curs.execute("")
+    db.commit()
+    print("ubah data", db)
+
+
+def cek_data_local() :
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
+    curs=db.cursor()
+    #kirim data lokal
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    curs.execute("SELECT * FROM data where status = 0")
+    db.commit()
+    print(db)
+    data_dict = {}
+    print("ubah data", db)
+    temp_data_local = curs.fetchall()
     
+    for x in temp_data_local:
+        data_fix = {"foto_cam":x(2),"ketinggian_air":x(1),"imei":imei, "waktu":x(3), "tanggal":x(4) }
+        kirim_data_local_server(data_fix)
+        ubah_data_local(x(0))
 
 def kirim_data_full():
-    #GPIO.output(4, GPIO.HIGH)#Modem hidup 
-    #GPIO.output(17, GPIO.HIGH)#Kamera Hidup
+
     global  current_time, date
     print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
@@ -225,63 +263,62 @@ def kirim_data_full():
        
     date = datetime.datetime.now().date()
 
+    hostname = "posduga.sysable.io"
+    if(check_url(hostname) == 0 or check_url(hostname) == 512):
+        cek_data_local()
+
     print("Booting Camera and Modem 4G")
-    #time.sleep(120)
-    #os.system('sudo route add 27.131.0.10 gw 192.168.100.1')
     if (check_ping() == 0):
         time.sleep(2)
         cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
         print("starting picture capture")
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
         bytes = b''
-        with open('img.png', 'wb') as f:
-            for chunk in vid.iter_content(chunk_size=1024):
-                bytes += chunk
-                a = bytes.find(b'\xff\xd8')
-                b = bytes.find(b'\xff\xd9')
-                if a != -1 and b != -1:
-                    jpg = bytes[a:b+2]
-                    bytes = bytes[b+2:]
-                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                    cv2.imwrite('img.png', i)
-                    #cv2.imshow('i', i)
+        path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
+        for chunk in vid.iter_content(chunk_size=1024):
+            bytes += chunk
+            a = bytes.find(b'\xff\xd8')
+            b = bytes.find(b'\xff\xd9')
+            if a != -1 and b != -1:
+                jpg = bytes[a:b+2]
+                bytes = bytes[b+2:]
+                i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                
     else :
       print("CCTV NOT DETECTED")
-
-
     
+    
+    #path = '/home/pi/img_cctv/%s' , (current_time)
+    
+    #insert.kirim_data_local(ketinggian_air_fix, path)
     
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
 
       if(check_ping()) == 0 :
-          buffer_img = compress_img('img.png')
+          buffer_img = compress_img(i)
           #print("waktu :" + converter_json(current_time))
-          
-          
+
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           #print("Response :" + response)
       else :
-          dump = " "
-          response = kirim_data(ketinggian_air_fix,dump,current_time, date)
+          buffer_img = " "
+          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
     else :
-        with open('/var/tmp/error.log', 'a') as fp:
+        status  = 1
+        
+        '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
-            print(date,current_time,"No I   nternet", file=fp)
+            print(date,current_time,"No Internet", file=fp)
         time.sleep(10)
         kirim_data_full()
-        
-    
+        '''
+    insert.kirim_data_local(date, jadwal_pengiriman, ketinggian_air_fix, buffer_img, status)
 
-      
-
-    #GPIO.output(4, GPIO.LOW)#Modem Mati 
-    #GPIO.output(17, GPIO.LOW)#Kamera Mati   
-    
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date
    pwm_millis = round(int(time.time() * 1000))
@@ -308,6 +345,7 @@ def main():
        current_time = time.strftime("%H:%M:%S", t)
        
        date = datetime.datetime.now().date()
+       
 
 
        if (current_millis - pwm_millis) > 10000 : #setiap 10 detik baca data sensor untuk melakukan filtering

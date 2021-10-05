@@ -5,19 +5,22 @@ import MySQLdb
 import time
 
 
-db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_lokal")
-curs=db.cursor()
+def kirim_data_local(tanggal, waktu, ketinggian_air, img, status) :
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
+    curs=db.cursor() 
+    #kirim data lokal
 
-# note that I'm using triplle quotes for formatting purposes
-# you can use one set of double quotes if you put the whole string on one line
-t = time.localtime()
-current_time = time.strftime("%H:%M:%S", t)
+    #
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
        
-date = datetime.datetime.now().date()
-waktu = str(date) + ' ' + current_time  
-print(waktu)
-curs.execute ("""INSERT INTO data
-            values(130, '/home/pi/img.png',getdate()""")
+    date = datetime.datetime.now().date()
+    temp_waktu = str(date) +  str(current_time)
+    img = "data:image/png;base64," + str(img)
+    
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    curs.execute ("""INSERT INTO data(ketinggian_air,data_cam,waktu,tanggal,status)
+            values(%s, %s,%s,%s,%s)""",(ketinggian_air, img, waktu, tanggal, status))
 
-db.commit()
-print ("Data committed")
+    db.commit()
+    print ("kirim data local",db)
