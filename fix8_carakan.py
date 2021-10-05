@@ -162,8 +162,7 @@ def kirim_data(data,img, waktu, tanggal):
     
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-        
-        
+        print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
