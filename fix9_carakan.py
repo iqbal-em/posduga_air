@@ -259,7 +259,6 @@ def cek_data_local() :
 def kirim_data_full():
 
     global  current_time, date
-    get_data_durasi()
     print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
@@ -267,8 +266,7 @@ def kirim_data_full():
     date = datetime.datetime.now().date()
 
     hostname = "posduga.sysable.io"
-    if(check_url(hostname) == 0 or check_url(hostname) == 512):
-        cek_data_local()
+    
 
     print("Booting Camera and Modem 4G")
     if (check_ping() == 0):
@@ -323,6 +321,9 @@ def kirim_data_full():
         '''
     insert.kirim_data_local(date, jadwal_pengiriman, ketinggian_air_fix, buffer_img, status)
 
+    if(check_url(hostname) == 0 or check_url(hostname) == 512):
+        cek_data_local()
+        
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date
    pwm_millis = round(int(time.time() * 1000))
