@@ -222,7 +222,7 @@ def get_data_durasi():
         lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        lastupdate = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
         kirim_data_full()
     except requests.exceptions.ConnectionError:
         
@@ -259,6 +259,7 @@ def cek_data_local() :
 def kirim_data_full():
 
     global  current_time, date
+    get_data_durasi()
     print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
