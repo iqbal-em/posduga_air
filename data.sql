@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2021 at 05:48 AM
+-- Generation Time: Oct 05, 2021 at 09:13 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -28,10 +28,33 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `data` (
+  `id` int(30) NOT NULL,
   `ketinggian_air` int(30) NOT NULL,
   `data_cam` text NOT NULL,
-  `waktu` datetime NOT NULL
+  `waktu` varchar(30) DEFAULT NULL,
+  `tanggal` varchar(30) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `data`
+--
+ALTER TABLE `data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `data`
+--
+ALTER TABLE `data`
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
