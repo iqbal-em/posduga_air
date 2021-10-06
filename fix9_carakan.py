@@ -19,6 +19,7 @@ import time
 import ast
 import insert
 import MySQLdb
+from datetime import timedelta
 
 
 
@@ -51,6 +52,7 @@ jadwal_pengiriman = ""
 current_time = ""
 date = ""
 waktu_pengiriman = ""
+
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -213,7 +215,7 @@ def get_data_durasi():
         siaga1 = data['data'][0]['siaga']['min_siaga_1']
         siaga2 = data['data'][0]['siaga']['min_siaga_2']
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000
+        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000 
         lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
         lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
@@ -251,6 +253,19 @@ def cek_data_local() :
         data_fix = {"foto_cam":x(2),"ketinggian_air":x(1),"imei":imei, "waktu":x(3), "tanggal":x(4) }
         kirim_data_local_server(data_fix)
         ubah_data_local(x(0))
+
+def ambil_data_local_terakhir() :
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
+    curs=db.cursor()
+    #kirim data lokal
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    curs.execute("SELECT * FROM data ORDER BY id DESC LIMIT 0, 1")
+    db.commit()
+    print(db)
+    data_dict = {}
+    print("Ambil Data Terakhir", db)
+    temp_data_local = curs.fetchone()
+    return temp_data_local[6]
 
 def kirim_data_full():
 
@@ -291,7 +306,6 @@ def kirim_data_full():
     
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
-
       if(check_ping()) == 0 :
           buffer_img = compress_img(i)
           #print("waktu :" + converter_json(current_time))
@@ -307,7 +321,11 @@ def kirim_data_full():
       status = 0
     else :
         status  = 1
+        if flag_status == 0 :
+            jadwal_pengiriman = current_time + timedelta(hours = 6)    
         
+        else :
+            jadwal_pengiriman = str(waktu_pengiriman)
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
@@ -315,7 +333,8 @@ def kirim_data_full():
         time.sleep(10)
         kirim_data_full()
         '''
-    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img, status)
+    
+    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img, status,waktu_pengiriman)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
@@ -375,20 +394,25 @@ def main():
               flag_status = 1
               set_millis = lvl_siaga1
               status =  "siaga1"
+              waktu_pengiriman = current_time + timedelta(minutes = 30)
+
           elif(int(ketinggian_air_fix) > siaga2):
               flag_status = 2
               set_millis = lvl_siaga2
               status =  "siaga2"
+              waktu_pengiriman = current_time + timedelta(hours = 1)
           elif(int(ketinggian_air_fix) > siaga3):
               flag_status = 3
               set_millis = lvl_siaga3
               status =  "siaga3"
+              waktu_pengiriman = current_time + timedelta(hours = 3)
           else:
               flag_status = 4
               set_millis = lvl_siaga4
               status =  "siaga4"
               print("Status : ", status)
               print("flag_status: ", flag_status)
+              waktu_pengiriman = current_time + timedelta(hours = 6)
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               with open('/var/tmp/testing.log', 'a') as fp:
@@ -406,7 +430,9 @@ def main():
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
-  
+        #Cek apakah ada update jadwal pengiriman
+        #Jika tidak ada maka ambil dari status siaga
+
 
        if (str(current_time) == jadwal_pengiriman):
            #waktu_pengiriman = jadwal_pengiriman
