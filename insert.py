@@ -5,7 +5,7 @@ import MySQLdb
 import time
 
 
-def kirim_data_local(tanggal, waktu, ketinggian_air, img, status) :
+def kirim_data_local(tanggal, waktu, ketinggian_air, img, status, next_jadwal) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor() 
     #kirim data lokal
