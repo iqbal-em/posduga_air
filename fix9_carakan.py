@@ -176,7 +176,7 @@ def kirim_data(data,img, waktu, tanggal):
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data_fix, 'done', file=fp)
                 time.sleep(2)
-
+        return jadwal_pengiriman
 
     except requests.exceptions.ConnectionError:
         print(r)
@@ -330,7 +330,7 @@ def main():
    print("Initiate Kalibrasi Sensor ......")
    pi = pigpio.pi()
    for i in range(10):
-       p1 = PWM_read(pi, 12)
+       p1 = PWM_read(pi, 12 )
        time.sleep(1)
        if (i == 0):
            last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
