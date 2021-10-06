@@ -161,7 +161,6 @@ def kirim_data(data,img, waktu, tanggal):
         data = json.loads(data)
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
         jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
-        print("disini" , jadwal_pengiriman)
         status = str(data['status']) 
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
@@ -180,7 +179,7 @@ def kirim_data(data,img, waktu, tanggal):
 
     except requests.exceptions.ConnectionError:
         print(r)
-        get_data_durasi()
+        #get_data_durasi()
     
     with open('/var/tmp/testing.log', 'a') as fp:
         print(data, 'done', file=fp) #simpan response pengiriman 
@@ -191,13 +190,12 @@ def kirim_data_local_server(data_fix):
     
     try:
         r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
-        
-        
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         data = json.loads(data)
         status = str(data['status']) 
         print(status) 
         r.close()
+        print("Response Kirim data Lokal : ", r)
 
 
 
