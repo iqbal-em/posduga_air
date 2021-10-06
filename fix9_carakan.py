@@ -363,7 +363,7 @@ def main():
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
-       
+       crt_time = datetime.now()
        date = datetime.datetime.now().date()
        
 
@@ -394,29 +394,30 @@ def main():
               flag_status = 1
               set_millis = lvl_siaga1
               status =  "siaga1"
-              tmp_current_time = current_time + timedelta(minutes = 30)
-              waktu_pengiriman = str(tmp_current_time)
+              tmp_current_time = crt_time + timedelta(minutes = 30)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
 
           elif(int(ketinggian_air_fix) > siaga2):
               flag_status = 2
               set_millis = lvl_siaga2
               status =  "siaga2"
-              tmp_current_time = current_time + timedelta(hours = 1)
-              waktu_pengiriman = str(tmp_current_time)
+              tmp_current_time = crt_time + timedelta(hours = 1)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+            
           elif(int(ketinggian_air_fix) > siaga3):
               flag_status = 3
               set_millis = lvl_siaga3
               status =  "siaga3"
-              tmp_current_time = current_time + timedelta(hours = 3)
-              waktu_pengiriman = str(tmp_current_time)
+              tmp_current_time = crt_time + timedelta(hours = 3)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
           else:
               flag_status = 4
               set_millis = lvl_siaga4
               status =  "siaga4"
               print("Status : ", status)
               print("flag_status: ", flag_status)
-              tmp_current_time = current_time + timedelta(hours = 6)
-              waktu_pengiriman = str(tmp_current_time)
+              tmp_current_time = crt_time + timedelta(hours = 6)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               with open('/var/tmp/testing.log', 'a') as fp:
