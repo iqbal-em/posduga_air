@@ -319,11 +319,11 @@ def kirim_data_full():
           print(response)
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
-      status = 0
+      status1 = 0
     else :
-        status  = 1
+        status1  = 1
         if flag_status == 0 :
-            jadwal_pengiriman = current_time + timedelta(hours = 6)    
+            jadwal_pengiriman = waktu_pengiriman   
         
         else :
             jadwal_pengiriman = waktu_pengiriman
@@ -335,7 +335,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img, status,waktu_pengiriman)
+    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img,status1,waktu_pengiriman)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
