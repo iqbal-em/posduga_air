@@ -173,6 +173,7 @@ def kirim_data(data,img, waktu, tanggal):
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                print(data, 'done', file=fp) #simpan response pengiriman 
                 print(data_fix, 'done', file=fp)
                 time.sleep(2)
         return jadwal_pengiriman
@@ -181,10 +182,6 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         #get_data_durasi()
     
-    with open('/var/tmp/testing.log', 'a') as fp:
-        print(data, 'done', file=fp) #simpan response pengiriman 
-        print(waktu,tanggal, 'done', file=fp)
-        time.sleep(2)
     
 def kirim_data_local_server(data_fix):
     
