@@ -364,7 +364,7 @@ def main():
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
-       crt_time = datetime.now()
+       crt_time = datetime.datetime.now()
        date = datetime.datetime.now().date()
        
 
