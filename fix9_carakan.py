@@ -271,6 +271,7 @@ def kirim_data_full():
 
     global  current_time, date, waktu_pengiriman, status
     print("Ketinggian_air_fix",ketinggian_air_fix)
+    status = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
        
