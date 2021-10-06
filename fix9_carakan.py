@@ -50,6 +50,7 @@ url2 = "https://posduga.sysable.io/api/sendjsondata-multiple"
 jadwal_pengiriman = ""
 current_time = ""
 date = ""
+waktu_pengiriman = ""
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -253,7 +254,7 @@ def cek_data_local() :
 
 def kirim_data_full():
 
-    global  current_time, date
+    global  current_time, date, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
@@ -314,13 +315,13 @@ def kirim_data_full():
         time.sleep(10)
         kirim_data_full()
         '''
-    insert.kirim_data_local(date, jadwal_pengiriman, ketinggian_air_fix, buffer_img, status)
+    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img, status)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
         
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    pi = pigpio.pi()
@@ -408,6 +409,7 @@ def main():
   
 
        if (str(current_time) == jadwal_pengiriman):
+           #waktu_pengiriman = jadwal_pengiriman
            kirim_data_full()
    
          
