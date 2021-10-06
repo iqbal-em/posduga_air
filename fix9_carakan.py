@@ -401,13 +401,13 @@ def main():
               flag_status = 2
               set_millis = lvl_siaga2
               status =  "siaga2"
-              tmp_current_time = current_time + timedelta(hour = 1)
+              tmp_current_time = current_time + timedelta(hours = 1)
               waktu_pengiriman = str(tmp_current_time)
           elif(int(ketinggian_air_fix) > siaga3):
               flag_status = 3
               set_millis = lvl_siaga3
               status =  "siaga3"
-              tmp_current_time = current_time + timedelta(hour = 3)
+              tmp_current_time = current_time + timedelta(hours = 3)
               waktu_pengiriman = str(tmp_current_time)
           else:
               flag_status = 4
@@ -415,7 +415,7 @@ def main():
               status =  "siaga4"
               print("Status : ", status)
               print("flag_status: ", flag_status)
-              tmp_current_time = current_time + timedelta(hour = 1)
+              tmp_current_time = current_time + timedelta(hours = 6)
               waktu_pengiriman = str(tmp_current_time)
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
