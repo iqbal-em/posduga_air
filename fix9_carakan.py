@@ -269,13 +269,16 @@ def ambil_data_local_terakhir() :
 
 def kirim_data_full():
 
-    global  current_time, date, waktu_pengiriman, status
+    global  current_time, date, status, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
     status = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-       
+    crt_time = datetime.datetime.now()
     date = datetime.datetime.now().date()
+    if flag_status == 0 :
+       tmp_current_time = crt_time + timedelta(hours = 6) 
+       waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
 
     hostname = "posduga.sysable.io"
     
@@ -323,7 +326,7 @@ def kirim_data_full():
     else :
         status1  = 1
         if flag_status == 0 :
-            jadwal_pengiriman = waktu_pengiriman   
+            jadwal_pengiriman = waktu_pengiriman
         
         else :
             jadwal_pengiriman = waktu_pengiriman
