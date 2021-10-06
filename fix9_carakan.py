@@ -325,7 +325,7 @@ def kirim_data_full():
             jadwal_pengiriman = current_time + timedelta(hours = 6)    
         
         else :
-            jadwal_pengiriman = str(waktu_pengiriman)
+            jadwal_pengiriman = waktu_pengiriman
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
@@ -394,25 +394,29 @@ def main():
               flag_status = 1
               set_millis = lvl_siaga1
               status =  "siaga1"
-              waktu_pengiriman = current_time + timedelta(minutes = 30)
+              tmp_current_time = current_time + timedelta(minutes = 30)
+              waktu_pengiriman = str(tmp_current_time)
 
           elif(int(ketinggian_air_fix) > siaga2):
               flag_status = 2
               set_millis = lvl_siaga2
               status =  "siaga2"
-              waktu_pengiriman = current_time + timedelta(hours = 1)
+              tmp_current_time = current_time + timedelta(hour = 1)
+              waktu_pengiriman = str(tmp_current_time)
           elif(int(ketinggian_air_fix) > siaga3):
               flag_status = 3
               set_millis = lvl_siaga3
               status =  "siaga3"
-              waktu_pengiriman = current_time + timedelta(hours = 3)
+              tmp_current_time = current_time + timedelta(hour = 3)
+              waktu_pengiriman = str(tmp_current_time)
           else:
               flag_status = 4
               set_millis = lvl_siaga4
               status =  "siaga4"
               print("Status : ", status)
               print("flag_status: ", flag_status)
-              waktu_pengiriman = current_time + timedelta(hours = 6)
+              tmp_current_time = current_time + timedelta(hour = 1)
+              waktu_pengiriman = str(tmp_current_time)
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               with open('/var/tmp/testing.log', 'a') as fp:

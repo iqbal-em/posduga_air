@@ -19,7 +19,7 @@ def kirim_data_local(tanggal, waktu, ketinggian_air, img, status, next_jadwal) :
     img = "data:image/png;base64," + str(img)
     
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute ("""INSERT INTO data(ketinggian_air,data_cam,waktu,tanggal,status)
+    curs.execute ("""INSERT INTO data(ketinggian_air,data_cam,waktu,tanggal,status,next_jadwal)
             values(%s, %s,%s,%s,%s,%s)""",(ketinggian_air, img, waktu, tanggal, status, next_jadwal))
 
     db.commit()
