@@ -311,7 +311,7 @@ def kirim_data_full():
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       if(check_ping()) == 0 :
-          buffer_img = compress_img(i)
+          buffer_img = base64.b64encode(i.decode('utf-8'))
           #print("waktu :" + converter_json(current_time))
 
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
