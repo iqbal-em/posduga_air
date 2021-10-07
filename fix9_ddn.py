@@ -103,6 +103,7 @@ def compress_img(nama_file): #compress image
        return img_base64
 
 
+
 class PWM_read:
    def __init__(self, pi, gpio):
       self.pi = pi
@@ -291,15 +292,18 @@ def kirim_data_full():
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
         bytes = b''
         #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
-        for chunk in vid.iter_content(chunk_size=1024):
-            bytes += chunk
-            a = bytes.find(b'\xff\xd8')
-            b = bytes.find(b'\xff\xd9')
-            if a != -1 and b != -1:
-                jpg = bytes[a:b+2]
-                bytes = bytes[b+2:]
-                i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                
+        with open('img.png', 'wb') as f:
+            for chunk in vid.iter_content(chunk_size=1024):
+                bytes += chunk
+                a = bytes.find(b'\xff\xd8')
+                b = bytes.find(b'\xff\xd9')
+                if a != -1 and b != -1:
+                    jpg = bytes[a:b+2]
+                    bytes = bytes[b+2:]
+                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    cv2.imwrite('img.png', i)
+                    #cv2.imshow('i', i)
+
     else :
       print("CCTV NOT DETECTED")
     
@@ -311,7 +315,7 @@ def kirim_data_full():
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       if(check_ping()) == 0 :
-          buffer_img = base64.b64encode(i.decode('utf-8'))
+          buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
 
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
@@ -424,17 +428,19 @@ def main():
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
-              with open('/var/tmp/testing.log', 'a') as fp:
-                  print("Status :",flag_status, ' Status Changed', file=fp)
-                  time.sleep(1)
-
-              print("perubahan status")
-              kirim_data_full()
-              last_flag_status = flag_status    
+              inc = inc + 1 
+              if (inc > 4):
+                  with open('/var/tmp/testing.log', 'a') as fp:
+                      print("Status :",flag_status, ' Status Changed', file=fp)
+                      #time.sleep(1)
+                      print("perubahan status")
+                      kirim_data_full()
+                      last_flag_status = flag_status    
               
 
               
           else :
+              inc = 0 
               last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
