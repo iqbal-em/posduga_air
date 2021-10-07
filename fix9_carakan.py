@@ -314,11 +314,11 @@ def kirim_data_full():
           buffer_img = compress_img(i)
           #print("waktu :" + converter_json(current_time))
 
-          response = kirim_data(ketinggian_air_fix,buffer_img,jadwal_pengiriman, date)
+          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           #print("Response :" + response)
       else :
           buffer_img = compress_img('tes_gambar.jpg')
-          response = kirim_data(ketinggian_air_fix,buffer_img,jadwal_pengiriman, date)
+          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
