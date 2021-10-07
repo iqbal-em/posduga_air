@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2021 at 09:13 AM
+-- Generation Time: Oct 07, 2021 at 08:43 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -33,7 +33,8 @@ CREATE TABLE `data` (
   `data_cam` text NOT NULL,
   `waktu` varchar(30) DEFAULT NULL,
   `tanggal` varchar(30) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0
+  `status` int(11) NOT NULL DEFAULT 0,
+  `next_jadwal` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

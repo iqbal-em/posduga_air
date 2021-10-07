@@ -27,7 +27,7 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-tinggi_sensor = 780
+tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
@@ -43,10 +43,10 @@ lvl_siaga4 = 21600000
 status = 0
 flag_status = 0
 last_flag_status = 0
-imei = "088298203828"
+imei = "088298203821"
 lastupdate_jam = ""
 url = "https://posduga.sysable.io/api/sendjsondata"
-url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203828"
+url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203821"
 url2 = "https://posduga.sysable.io/api/sendjsondata-multiple"
 jadwal_pengiriman = ""
 current_time = ""
