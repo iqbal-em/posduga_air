@@ -40,7 +40,7 @@ lvl_siaga1 = 1800000
 lvl_siaga2 = 3600000
 lvl_siaga3 = 10800000
 lvl_siaga4 = 21600000
-status = 0
+status1 = 0
 flag_status = 0
 last_flag_status = 0
 imei = "088298203828"
@@ -271,7 +271,7 @@ def ambil_data_local_terakhir() :
 
 def kirim_data_full():
    
-    global  current_time, date, status, waktu_pengiriman
+    global  current_time, date, status1, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
     print("flag_status", flag_status)
     status = 0
