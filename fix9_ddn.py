@@ -270,9 +270,10 @@ def ambil_data_local_terakhir() :
     return temp_data_local[6]
 
 def kirim_data_full():
-
+   
     global  current_time, date, status, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
+    print("flag_status", flag_status)
     status = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
