@@ -157,7 +157,7 @@ def kirim_data(data,img, waktu, tanggal):
     print("tes" ,data_fix)
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-        
+            
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
@@ -314,11 +314,11 @@ def kirim_data_full():
           buffer_img = compress_img(i)
           #print("waktu :" + converter_json(current_time))
 
-          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+          response = kirim_data(ketinggian_air_fix,buffer_img,jadwal_pengiriman, date)
           #print("Response :" + response)
       else :
-          buffer_img = " "
-          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+          buffer_img = compress_img('tes_gambar.jpg')
+          response = kirim_data(ketinggian_air_fix,buffer_img,jadwal_pengiriman, date)
           print(response)
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
@@ -338,7 +338,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    insert.kirim_data_local(date, current_time, ketinggian_air_fix, buffer_img,status1,waktu_pengiriman)
+    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
@@ -427,6 +427,7 @@ def main():
               with open('/var/tmp/testing.log', 'a') as fp:
                   print("Status :",flag_status, ' Status Changed', file=fp)
                   time.sleep(1)
+
               print("perubahan status")
               kirim_data_full()
               last_flag_status = flag_status    
