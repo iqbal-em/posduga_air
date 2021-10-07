@@ -222,6 +222,7 @@ def get_data_durasi():
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
         jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        cek_siaga_init()
         kirim_data_full()
     except requests.exceptions.ConnectionError:
         
@@ -346,7 +347,44 @@ def kirim_data_full():
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
-        
+
+def cek_siaga_init():
+     global waktu_pengiriman,flag_status
+     t = time.localtime()
+     current_time = time.strftime("%H:%M:%S", t)
+     crt_time = datetime.datetime.now()
+     date = datetime.datetime.now().date()
+
+     if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
+         flag_status = 1
+         set_millis = lvl_siaga1
+         status =  "siaga1"
+         tmp_current_time = crt_time + timedelta(minutes = 30)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+     elif(int(ketinggian_air_fix) > siaga2):
+         flag_status = 2
+         set_millis = lvl_siaga2
+         status =  "siaga2"
+         tmp_current_time = crt_time + timedelta(hours = 1)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+            
+     elif(int(ketinggian_air_fix) > siaga3):
+         flag_status = 3
+         set_millis = lvl_siaga3
+         status =  "siaga3"
+         tmp_current_time = crt_time + timedelta(hours = 3)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+         
+     else:
+         flag_status = 4
+         set_millis = lvl_siaga4
+         status =  "siaga4"
+         print("Status : ", status)
+         print("flag_status: ", flag_status)
+         tmp_current_time = crt_time + timedelta(hours = 6)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+    
+
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
    pwm_millis = round(int(time.time() * 1000))
@@ -361,7 +399,8 @@ def main():
            last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
            last_kalibrasi = ketinggian_air 
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
-       print(last_ketinggian_air)   
+       print(last_ketinggian_air)  
+
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi() #cek jadwal pengiriman ketika booting
