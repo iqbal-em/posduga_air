@@ -27,7 +27,7 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-tinggi_sensor = 780
+tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
@@ -103,6 +103,7 @@ def compress_img(nama_file): #compress image
        return img_base64
 
 
+
 class PWM_read:
    def __init__(self, pi, gpio):
       self.pi = pi
@@ -154,7 +155,7 @@ def kirim_data(data,img, waktu, tanggal):
     print(waktu, tanggal)
     data_tmp = data
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-    print("tes" ,data_fix)
+    #print("tes" ,data_fix)
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
             
@@ -221,6 +222,7 @@ def get_data_durasi():
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
         jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        cek_siaga_init()
         kirim_data_full()
     except requests.exceptions.ConnectionError:
         
@@ -268,9 +270,10 @@ def ambil_data_local_terakhir() :
     return temp_data_local[6]
 
 def kirim_data_full():
-
+   
     global  current_time, date, status, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
+    print("flag_status", flag_status)
     status = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
@@ -291,15 +294,18 @@ def kirim_data_full():
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
         bytes = b''
         #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
-        for chunk in vid.iter_content(chunk_size=1024):
-            bytes += chunk
-            a = bytes.find(b'\xff\xd8')
-            b = bytes.find(b'\xff\xd9')
-            if a != -1 and b != -1:
-                jpg = bytes[a:b+2]
-                bytes = bytes[b+2:]
-                i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                
+        with open('img.png', 'wb') as f:
+            for chunk in vid.iter_content(chunk_size=1024):
+                bytes += chunk
+                a = bytes.find(b'\xff\xd8')
+                b = bytes.find(b'\xff\xd9')
+                if a != -1 and b != -1:
+                    jpg = bytes[a:b+2]
+                    bytes = bytes[b+2:]
+                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    cv2.imwrite('img.png', i)
+                    #cv2.imshow('i', i)
+
     else :
       print("CCTV NOT DETECTED")
     
@@ -311,7 +317,7 @@ def kirim_data_full():
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
       if(check_ping()) == 0 :
-          buffer_img = compress_img(i)
+          buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
 
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
@@ -342,7 +348,44 @@ def kirim_data_full():
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
-        
+
+def cek_siaga_init():
+     global waktu_pengiriman,flag_status
+     t = time.localtime()
+     current_time = time.strftime("%H:%M:%S", t)
+     crt_time = datetime.datetime.now()
+     date = datetime.datetime.now().date()
+
+     if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
+         flag_status = 1
+         set_millis = lvl_siaga1
+         status =  "siaga1"
+         tmp_current_time = crt_time + timedelta(minutes = 30)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+     elif(int(ketinggian_air_fix) > siaga2):
+         flag_status = 2
+         set_millis = lvl_siaga2
+         status =  "siaga2"
+         tmp_current_time = crt_time + timedelta(hours = 1)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+            
+     elif(int(ketinggian_air_fix) > siaga3):
+         flag_status = 3
+         set_millis = lvl_siaga3
+         status =  "siaga3"
+         tmp_current_time = crt_time + timedelta(hours = 3)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+         
+     else:
+         flag_status = 4
+         set_millis = lvl_siaga4
+         status =  "siaga4"
+         print("Status : ", status)
+         print("flag_status: ", flag_status)
+         tmp_current_time = crt_time + timedelta(hours = 6)
+         waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+    
+
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
    pwm_millis = round(int(time.time() * 1000))
@@ -357,7 +400,8 @@ def main():
            last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
            last_kalibrasi = ketinggian_air 
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
-       print(last_ketinggian_air)   
+       print(last_ketinggian_air)  
+
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi() #cek jadwal pengiriman ketika booting
@@ -424,17 +468,19 @@ def main():
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
     
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
-              with open('/var/tmp/testing.log', 'a') as fp:
-                  print("Status :",flag_status, ' Status Changed', file=fp)
-                  time.sleep(1)
-
-              print("perubahan status")
-              kirim_data_full()
-              last_flag_status = flag_status    
+              inc = inc + 1 
+              if (inc > 4):
+                  with open('/var/tmp/testing.log', 'a') as fp:
+                      print("Status :",flag_status, ' Status Changed', file=fp)
+                      #time.sleep(1)
+                      print("perubahan status")
+                      kirim_data_full()
+                      last_flag_status = flag_status    
               
 
               
           else :
+              inc = 0 
               last_flag_status = flag_status  
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
