@@ -479,9 +479,11 @@ def main():
                       last_flag_status = flag_status    
               
           else :
+              
               inc = 0 
               last_flag_status = flag_status  
-
+              print(last_flag_status)
+              
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
