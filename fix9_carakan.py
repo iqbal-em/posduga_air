@@ -393,7 +393,7 @@ def main():
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
-       p1 = PWM_read(pi, 12 )
+       p1 = PWM_read(pi, 12)
        time.sleep(1)
        if (i == 0):
            last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
