@@ -27,7 +27,7 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-tinggi_sensor = 752
+tinggi_sensor = 800
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
@@ -483,7 +483,7 @@ def main():
               inc = 0 
               last_flag_status = flag_status  
               print(last_flag_status)
-              
+
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
