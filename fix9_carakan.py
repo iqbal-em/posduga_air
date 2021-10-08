@@ -88,7 +88,7 @@ def check_url(hostname):
         pingstatus = "Internet Error"
         #print("Trying to Route to Dns Server")
         
-        time.sleep(10)
+        time.sleep(5)
     
         response = os.system("ping -c 1 " + hostname)
         #print(response)
@@ -391,6 +391,7 @@ def main():
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    pi = pigpio.pi()
+   time.sleep(5)
    for i in range(10):
        p1 = PWM_read(pi, 12 )
        time.sleep(1)
@@ -476,8 +477,6 @@ def main():
                       print("perubahan status")
                       kirim_data_full()
                       last_flag_status = flag_status    
-              
-
               
           else :
               inc = 0 
