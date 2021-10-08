@@ -391,6 +391,7 @@ def main():
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    pi = pigpio.pi()
+   time.sleep(5)
    for i in range(10):
        p1 = PWM_read(pi, 12 )
        time.sleep(1)
