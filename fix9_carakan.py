@@ -170,8 +170,8 @@ def kirim_data(data,img, waktu, tanggal):
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
         if (status == "500"):
-            print("Data Dikirim Ulang")
-            kirim_data_full() #jika data kekirim, looping kirim data
+            print("Response 500")
+            #kirim_data_full() #jika data kekirim, looping kirim data
 
         else :
             with open('/var/tmp/testing.log', 'a') as fp:
