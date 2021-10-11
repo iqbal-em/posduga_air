@@ -40,7 +40,7 @@ lvl_siaga1 = 1800000
 lvl_siaga2 = 3600000
 lvl_siaga3 = 10800000
 lvl_siaga4 = 21600000
-status1 = 0
+status = 0
 flag_status = 0
 last_flag_status = 0
 imei = "088298203828"
@@ -88,7 +88,7 @@ def check_url(hostname):
         pingstatus = "Internet Error"
         #print("Trying to Route to Dns Server")
         
-        time.sleep(5)
+        time.sleep(10)
     
         response = os.system("ping -c 1 " + hostname)
         #print(response)
@@ -271,7 +271,7 @@ def ambil_data_local_terakhir() :
 
 def kirim_data_full():
    
-    global  current_time, date, status1, waktu_pengiriman
+    global  current_time, date, status, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
     print("flag_status", flag_status)
     status = 0
@@ -393,7 +393,7 @@ def main():
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
-       p1 = PWM_read(pi, 12)
+       p1 = PWM_read(pi, 12 )
        time.sleep(1)
        if (i == 0):
            last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
@@ -478,11 +478,11 @@ def main():
                       kirim_data_full()
                       last_flag_status = flag_status    
               
-          else :
+
               
+          else :
               inc = 0 
               last_flag_status = flag_status  
-              print(last_flag_status)
 
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
