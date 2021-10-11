@@ -175,8 +175,8 @@ def kirim_data(data,img, waktu, tanggal):
 
         else :
             with open('/var/tmp/testing.log', 'a') as fp:
-                img = "data:image/png;base64," #simpan data payload
-                data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                #img = "data:image/png;base64," #simpan data payload
+                #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data, 'done', file=fp) #simpan response pengiriman 
                 print(data_fix, 'done', file=fp)
                 time.sleep(2)
