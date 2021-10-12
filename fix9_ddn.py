@@ -172,7 +172,7 @@ def kirim_data(data,img, waktu, tanggal):
         r.close()
         if (status == "500"):
             status_response = 1
-            jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
+            #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
             print("Response 500")
             #kirim_data_full() #jika data kekirim, looping kirim data
 
