@@ -222,7 +222,7 @@ def get_data_durasi():
         lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
         lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
         siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        #jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
         print("jadwal_pengiriman",jadwal_pengiriman)
         cek_siaga_init()
         kirim_data_full()
@@ -495,6 +495,7 @@ def main():
        
        date1 = datetime.now().date()
        #print("date1", date1)
+       tmp_string_realtime = str(date1) + " " + jadwal_pengiriman
        tmp_jadwal_pengiriman = dt.datetime.strptime(jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
        #print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date1) + " " + str(current_time)
