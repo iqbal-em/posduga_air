@@ -52,7 +52,7 @@ jadwal_pengiriman = ""
 current_time = ""
 date = ""
 waktu_pengiriman = ""
-
+status_response = 0
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -144,7 +144,7 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
-    global jadwal_pengiriman
+    global jadwal_pengiriman, global status_response
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img) 
     else :
@@ -171,10 +171,13 @@ def kirim_data(data,img, waktu, tanggal):
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
         if (status == "500"):
+            status_response = 1
+            jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
             print("Response 500")
             #kirim_data_full() #jika data kekirim, looping kirim data
 
         else :
+            status_response = 0
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -495,8 +498,11 @@ def main():
        
        date1 = datetime.now().date()
        #print("date1", date1)
-       tmp_jadwal_pengiriman = str(date1) + " " + jadwal_pengiriman
-       tmp_jadwal_pengiriman = dt.datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+       if (status_response == 0):
+           tmp_jadwal_pengiriman = str(date1) + " " + jadwal_pengiriman
+           tmp_jadwal_pengiriman = dt.datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+       else :
+           tmp_jadwal_pengiriman = dt.datetime.strptime(jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
        #print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date1) + " " + str(current_time)
        tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
