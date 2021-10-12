@@ -1,6 +1,7 @@
 
 
-from __future__ import print_function 
+from __future__ import print_function
+from threading import Thread 
 import time, sys
 import cv2
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
@@ -20,14 +21,13 @@ import ast
 import insert
 import MySQLdb
 from datetime import timedelta
-from threading import Event, Thread
-import threading
+
 
 
 ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
-crt_time = datetime.datetime.now()
+
 tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
@@ -62,8 +62,6 @@ headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 last_ketinggian_air = 0
 ketinggian_air_fix = 0
 
-event = threading.Event()
-pi = pigpio.pi()
 def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
@@ -91,7 +89,7 @@ def check_url(hostname):
         pingstatus = "Internet Error"
         #print("Trying to Route to Dns Server")
         
-        #time.sleep(10)
+        time.sleep(10)
     
         response = os.system("ping -c 1 " + hostname)
         #print(response)
@@ -182,7 +180,7 @@ def kirim_data(data,img, waktu, tanggal):
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data, 'done', file=fp) #simpan response pengiriman 
                 print(data_fix, 'done', file=fp)
-                #time.sleep(2)
+                time.sleep(2)
         return jadwal_pengiriman
 
     except requests.exceptions.ConnectionError:
@@ -209,7 +207,7 @@ def kirim_data_local_server(data_fix):
     with open('/var/tmp/testing.log', 'a') as fp:
         print('Kirim ulang data local', file=fp) #simpan response pengiriman 
         print(data, 'done', file=fp) #simpan response pengiriman 
-        #time.sleep(2)
+        time.sleep(2)
     
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
@@ -291,7 +289,7 @@ def kirim_data_full():
 
     print("Booting Camera and Modem 4G")
     if (check_ping() == 0):
-        #time.sleep(2)
+        time.sleep(2)
         cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
         print("starting picture capture")
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
@@ -388,111 +386,38 @@ def cek_siaga_init():
          tmp_current_time = crt_time + timedelta(hours = 6)
          waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
     
-class calibrate_sensor(Thread):
-    global last_kalibrasi,last_ketinggian_air,ketinggian_air_fix, pi
+class cek_jadwal_pengiriman(Thread):
     def run(self):
-         print("Initiate Kalibrasi Sensor ......")
-         event.wait(5)
-         for i in range(10):
-             p1 = PWM_read(pi, 12 )
-             event.wait(1)
-             if (i == 0):
-                 last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
-             if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)): #mencari nilai paling kecil dari 10 data kalibrasi
-                 last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
-                 last_kalibrasi = ketinggian_air 
-                 ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
-             print(last_ketinggian_air)  
-
-class reading_waterlevel(Thread):
-    global status, ketinggian_air, ketinggian_air_fix, tinggi_sensor, flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, jadwal_pengiriman, pi
-    
-    def run(self):
-        global last_ketinggian_air, last_flag_status
-        inc = 0
-        p1 = PWM_read(pi, 12)
-        event.wait(1)
-        
-
-          #print("Real Ketinggian_air :", int(ketinggian_air))
-          #filter noise sensor
-
-        if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
-            ketinggian_air_fix = last_ketinggian_air #filter jika ada data noise yang beda lebih dari 40 dari last_ketinggian_air
-            print("filter noise") #Jika iya. maka akan dilakukan filter menggunakan data sebelumnya
-        else :
-            ketinggian_air_fix = ketinggian_air #update biasa ketinggian air
-            last_ketinggian_air = ketinggian_air #update last_ketinggian_air untuk filter selanjutnya
-        
-             
-        print("Ketinggian_air :", ketinggian_air_fix)
-        #print("Last_ketinggian:",int(last_ketinggian_air))
-
-        p1.cancel()
-          
-        if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
-            flag_status = 1
-            set_millis = lvl_siaga1
-            status =  "siaga1"
-            tmp_current_time = crt_time + timedelta(minutes = 30)
-            waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
-
-        elif(int(ketinggian_air_fix) > siaga2):
-            flag_status = 2
-            set_millis = lvl_siaga2
-            status =  "siaga2"
-            tmp_current_time = crt_time + timedelta(hours = 1)
-            waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
-            
-        elif(int(ketinggian_air_fix) > siaga3):
-            flag_status = 3
-            set_millis = lvl_siaga3
-            status =  "siaga3"
-            tmp_current_time = crt_time + timedelta(hours = 3)
-            waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
-        else:
-            flag_status = 4
-            set_millis = lvl_siaga4
-            status =  "siaga4"
-            print("Status : ", status)
-            print("flag_status: ", flag_status)
-            tmp_current_time = crt_time + timedelta(hours = 6)
-            waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
-    
-        if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
-            inc = inc + 1 
-            if (inc > 4):
-                with open('/var/tmp/testing.log', 'a') as fp:
-                    print("Status :",flag_status, ' Status Changed', file=fp)
-                      #time.sleep(1)
-                    print("perubahan status")
-                    kirim_data_full()
-                    last_flag_status = flag_status    
-                
-        else :
-            inc = 0 
-            last_flag_status = flag_status  
-
-        with open('/var/tmp/data_sensor.log', 'a') as fp:
-            print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
-            #time.sleep(1)
-        #Cek apakah ada update jadwal pengiriman
-        #Jika tidak ada maka ambil dari status siaga
-
+        print("cek Thread Jadwal Pengiriman " , jadwal_pengiriman)
+        if (str(current_time) == jadwal_pengiriman):
+           #waktu_pengiriman = jadwal_pengiriman
+           kirim_data_full()
 
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, jadwal_pengiriman, crt_time
-   pwm_millis = round(int(time.time() * 1000))
 
-   
-   calibrate_sensor().start()
-   
-   
+   cek_jadwal_pengiriman.start()
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
+   pwm_millis = round(int(time.time() * 1000))
+   print("Initiate Kalibrasi Sensor ......")
+   pi = pigpio.pi()
+   time.sleep(5)
+   for i in range(10):
+       p1 = PWM_read(pi, 12 )
+       time.sleep(1)
+       if (i == 0):
+           last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
+       if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)): #mencari nilai paling kecil dari 10 data kalibrasi
+           last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
+           last_kalibrasi = ketinggian_air 
+           ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
+       print(last_ketinggian_air)  
+
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
+       global jadwal_pengiriman
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
@@ -503,11 +428,79 @@ def main():
 
        if (current_millis - pwm_millis) > 10000 : #setiap 10 detik baca data sensor untuk melakukan filtering
           print(jadwal_pengiriman)
-          reading_waterlevel().start()          
+          p1 = PWM_read(pi, 12)
+          time.sleep(1)
+          print("Current Time : " + current_time)
 
-       if (str(current_time) == jadwal_pengiriman):
-           #waktu_pengiriman = jadwal_pengiriman
-           kirim_data_full()
+          #print("Real Ketinggian_air :", int(ketinggian_air))
+          #filter noise sensor
+
+          if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
+              ketinggian_air_fix = last_ketinggian_air #filter jika ada data noise yang beda lebih dari 40 dari last_ketinggian_air
+              print("filter noise") #Jika iya. maka akan dilakukan filter menggunakan data sebelumnya
+          else :
+              ketinggian_air_fix = ketinggian_air #update biasa ketinggian air
+              last_ketinggian_air = ketinggian_air #update last_ketinggian_air untuk filter selanjutnya
+          pwm_millis = current_millis
+             
+          print("Ketinggian_air :", ketinggian_air_fix)
+          #print("Last_ketinggian:",int(last_ketinggian_air))
+
+          p1.cancel()
+          
+          if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
+              flag_status = 1
+              set_millis = lvl_siaga1
+              status =  "siaga1"
+              tmp_current_time = crt_time + timedelta(minutes = 30)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+
+          elif(int(ketinggian_air_fix) > siaga2):
+              flag_status = 2
+              set_millis = lvl_siaga2
+              status =  "siaga2"
+              tmp_current_time = crt_time + timedelta(hours = 1)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+            
+          elif(int(ketinggian_air_fix) > siaga3):
+              flag_status = 3
+              set_millis = lvl_siaga3
+              status =  "siaga3"
+              tmp_current_time = crt_time + timedelta(hours = 3)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+          else:
+              flag_status = 4
+              set_millis = lvl_siaga4
+              status =  "siaga4"
+              print("Status : ", status)
+              print("flag_status: ", flag_status)
+              tmp_current_time = crt_time + timedelta(hours = 6)
+              waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+    
+          if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
+              inc = inc + 1 
+              if (inc > 4):
+                  with open('/var/tmp/testing.log', 'a') as fp:
+                      print("Status :",flag_status, ' Status Changed', file=fp)
+                      #time.sleep(1)
+                      print("perubahan status")
+                      kirim_data_full()
+                      last_flag_status = flag_status    
+              
+
+              
+          else :
+              inc = 0 
+              last_flag_status = flag_status  
+
+          with open('/var/tmp/data_sensor.log', 'a') as fp:
+              print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
+              time.sleep(1)
+        #Cek apakah ada update jadwal pengiriman
+        #Jika tidak ada maka ambil dari status siaga
+
+       
+       
    
          
 
