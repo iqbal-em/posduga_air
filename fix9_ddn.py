@@ -506,7 +506,7 @@ def main():
        else :
            elapsed = tmp_real_time
        print("elapsed :",elapsed)
-       if (str(current_time) == jadwal_pengiriman or elapsed < datetime.timedelta(minutes=2)):
+       if (str(current_time) == jadwal_pengiriman or elapsed < timedelta(minutes=2)):
            if (flag_kirim == 0):
                flag_kirim = 1
                #waktu_pengiriman = jadwal_pengiriman
