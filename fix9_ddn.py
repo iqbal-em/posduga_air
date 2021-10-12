@@ -512,6 +512,7 @@ def main():
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
            flag_data_kirim = 1
        else :
+           print("elapsed :",elapsed)
            elapsed = tmp_real_time
        #print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=2) and flag_data_kirim == 1 and elapsed.hour == 0)):
