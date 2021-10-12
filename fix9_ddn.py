@@ -209,7 +209,7 @@ def kirim_data_local_server(data_fix):
         #time.sleep(2)
     
 def get_data_durasi():
-    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
+    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman
     try : 
         r =  requests.get(url=url1)
         data = r.json()
