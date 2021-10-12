@@ -502,7 +502,7 @@ def main():
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
        else :
-           elapsed = dt.datetime.now()
+           elapsed = tmp_real_time
        print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or elapsed < dt.timedelta(minutes=2)):
            if (flag_kirim == 0):
