@@ -391,6 +391,7 @@ def main():
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
+   flag_data_kirim = 0
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
@@ -503,11 +504,12 @@ def main():
        tmp_currt_time = datetime.now()
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
+           flag_data_kirim = 1
        else :
            elapsed = tmp_real_time
-           elapsed.minute = 3
        print("elapsed :",elapsed)
-       if (str(current_time) == jadwal_pengiriman or elapsed.minute < 2):
+       if (str(current_time) == jadwal_pengiriman or (elapsed.minute < 2 and flag_data_kirim == 1)):
+           flag_data_kirim = 0
            if (flag_kirim == 0):
                flag_kirim = 1
                #waktu_pengiriman = jadwal_pengiriman
