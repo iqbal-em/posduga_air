@@ -224,7 +224,7 @@ def get_data_durasi():
         jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
         print("jadwal_pengiriman",jadwal_pengiriman)
         cek_siaga_init()
-        #kirim_data_full()
+        kirim_data_full()
     except requests.exceptions.ConnectionError:
         
         print(r)
