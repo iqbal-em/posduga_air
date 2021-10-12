@@ -496,7 +496,7 @@ def main():
        date1 = datetime.now().date()
        #print("date1", date1)
        tmp_string = str(date1) + " " + jadwal_pengiriman
-       
+       print(jadwal_pengiriman)
        tmp_jadwal_pengiriman = dt.datetime.strptime(str(jadwal_pengiriman), '%Y-%m-%d %H:%M:%S')
        #print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date1) + " " + str(current_time)
