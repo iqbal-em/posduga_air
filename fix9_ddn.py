@@ -497,7 +497,7 @@ def main():
        #print("date1", date1)
        tmp_string = str(date1) + " " + jadwal_pengiriman
        
-       tmp_jadwal_pengiriman = datetime.strptime(jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+       tmp_jadwal_pengiriman = dt.strptime(jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
        #print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date1) + " " + str(current_time)
        tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
