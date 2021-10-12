@@ -491,12 +491,14 @@ def main():
         #Cek apakah ada update jadwal pengiriman
         #Jika tidak ada maka ambil dari status siaga
        
+       date1 = datetime.datetime.now().date()
+       print("date1", date1)
        tmp_string = str(date) + " " + jadwal_pengiriman
-      
-       tmp_jadwal_pengiriman = datetime.strptime(tmp_string, '%Y-%m-%d %H:%M:%S').strftime("%d-%m-%y")
+       
+       tmp_jadwal_pengiriman = datetime.strptime(tmp_string, '%Y-%m-%d %H:%M:%S')
        print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date) + " " + str(current_time)
-       tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S').strftime("%d-%m-%y")
+       tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
        print("tmp_real_time" , tmp_real_time)
        tmp_currt_time = datetime.now()
        if (tmp_real_time > tmp_jadwal_pengiriman):
