@@ -437,7 +437,6 @@ def main():
           pwm_millis = current_millis
              
           print("Ketinggian_air :", ketinggian_air_fix)
-          print("elapsed :",elapsed)
           #print("Last_ketinggian:",int(last_ketinggian_air))
 
           p1.cancel()
@@ -508,7 +507,7 @@ def main():
            flag_data_kirim = 1
        else :
            elapsed = tmp_real_time
-       
+       print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or (elapsed.minute < 2 and flag_data_kirim == 1)):
            flag_data_kirim = 0
            if (flag_kirim == 0):
