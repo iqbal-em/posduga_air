@@ -5,7 +5,7 @@ import time, sys
 import cv2
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
 import mysql.connector
-#import datetime
+import datetime as dt
 import RPi.GPIO as GPIO
 from hikvisionapi import Client
 import numpy as np
@@ -277,8 +277,8 @@ def kirim_data_full():
     status = 0
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
-    crt_time = datetime.datetime.now()
-    date = datetime.datetime.now().date()
+    crt_time = dt.datetime.now()
+    date = dt.datetime.now().date()
     if flag_status == 0 :
        tmp_current_time = crt_time + timedelta(hours = 6) 
        waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
@@ -353,8 +353,8 @@ def cek_siaga_init():
      global waktu_pengiriman,flag_status
      t = time.localtime()
      current_time = time.strftime("%H:%M:%S", t)
-     crt_time = datetime.datetime.now()
-     date = datetime.datetime.now().date()
+     crt_time = dt.datetime.now()
+     date = dt.datetime.now().date()
 
      if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
          flag_status = 1
@@ -413,8 +413,8 @@ def main():
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
        current_time = time.strftime("%H:%M:%S", t)
-       crt_time = datetime.datetime.now()
-       date = datetime.datetime.now().date()
+       crt_time = dt.datetime.now()
+       date = dt.datetime.now().date()
        
 
 
