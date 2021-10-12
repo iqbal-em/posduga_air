@@ -405,8 +405,9 @@ class calibrate_sensor(Thread):
 
 class reading_waterlevel(Thread):
     global status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, jadwal_pengiriman
-    pi = pigpio.pi()
+    
     def run(self):
+        pi = pigpio.pi()
         inc = 0
         p1 = PWM_read(pi, 12)
         event.wait(1)
