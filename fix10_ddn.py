@@ -62,6 +62,7 @@ headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 last_ketinggian_air = 0
 ketinggian_air_fix = 0
 
+event = threading.Event()
 def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
@@ -483,7 +484,7 @@ def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, jadwal_pengiriman, crt_time
    pwm_millis = round(int(time.time() * 1000))
 
-   event = threading.Event()
+   
    calibrate_sensor().start()
    
    pi = pigpio.pi()
