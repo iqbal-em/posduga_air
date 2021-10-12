@@ -144,7 +144,7 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
-    global jadwal_pengiriman, global status_response
+    global jadwal_pengiriman, status_response
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img) 
     else :
