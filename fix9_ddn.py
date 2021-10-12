@@ -5,7 +5,7 @@ import time, sys
 import cv2
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
 import mysql.connector
-import datetime
+#import datetime
 import RPi.GPIO as GPIO
 from hikvisionapi import Client
 import numpy as np
