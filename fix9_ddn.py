@@ -88,7 +88,7 @@ def check_url(hostname):
         pingstatus = "Internet Error"
         #print("Trying to Route to Dns Server")
         
-        time.sleep(10)
+        #time.sleep(10)
     
         response = os.system("ping -c 1 " + hostname)
         #print(response)
@@ -179,7 +179,7 @@ def kirim_data(data,img, waktu, tanggal):
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data, 'done', file=fp) #simpan response pengiriman 
                 print(data_fix, 'done', file=fp)
-                time.sleep(2)
+                #time.sleep(2)
         return jadwal_pengiriman
 
     except requests.exceptions.ConnectionError:
@@ -206,7 +206,7 @@ def kirim_data_local_server(data_fix):
     with open('/var/tmp/testing.log', 'a') as fp:
         print('Kirim ulang data local', file=fp) #simpan response pengiriman 
         print(data, 'done', file=fp) #simpan response pengiriman 
-        time.sleep(2)
+        #time.sleep(2)
     
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4
@@ -288,7 +288,7 @@ def kirim_data_full():
 
     print("Booting Camera and Modem 4G")
     if (check_ping() == 0):
-        time.sleep(2)
+        #time.sleep(2)
         cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
         print("starting picture capture")
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
@@ -390,6 +390,7 @@ def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
+   flag_kirim = 0
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
@@ -489,12 +490,28 @@ def main():
               time.sleep(1)
         #Cek apakah ada update jadwal pengiriman
         #Jika tidak ada maka ambil dari status siaga
-
-
-       if (str(current_time) == jadwal_pengiriman):
-           #waktu_pengiriman = jadwal_pengiriman
-           kirim_data_full()
-   
+       
+       tmp_string = date + " " + jadwal_pengiriman
+      
+       tmp_jadwal_pengiriman = datetime.strptime(tmp_string, '%d/%m/%y %H:%M:%S')
+       print("tmp_string" , tmp_jadwal_pengiriman)
+       tmp_string_realtime = date + " " + str(current_time)
+       tmp_real_time = datetime.strptime(tmp_string_realtime, '%d/%m/%y %H:%M:%S')
+       print("tmp_real_time" , tmp_real_time)
+       if (tmp_real_time > tmp_jadwal_pengiriman):
+           elapsed = tmp_real_time - tmp_jadwal_pengiriman
+       else :
+           elapsed =10000
+       if (str(current_time) == jadwal_pengiriman or elapsed < datetime.timedelta(minutes=2)):
+           if (flag_kirim == 0):
+               flag_kirim = 1
+               #waktu_pengiriman = jadwal_pengiriman
+               kirim_data_full()
+               
+           else :
+               print("data sudah dkirim pada jadwal pengiriman :", jadwal_pengiriman )
+       else :
+           flag_kirim = 0
          
 
 
