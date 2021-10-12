@@ -493,10 +493,10 @@ def main():
        
        tmp_string = str(date) + " " + jadwal_pengiriman
       
-       tmp_jadwal_pengiriman = datetime.strptime(tmp_string, '%d/%m/%y %H:%M:%S')
+       tmp_jadwal_pengiriman = datetime.strptime(tmp_string, '%y/%m/%d %H:%M:%S')
        print("tmp_string" , tmp_jadwal_pengiriman)
        tmp_string_realtime = str(date) + " " + str(current_time)
-       tmp_real_time = datetime.strptime(tmp_string_realtime, '%d/%m/%y %H:%M:%S')
+       tmp_real_time = datetime.strptime(tmp_string_realtime, '%y/%m/%d %H:%M:%S')
        print("tmp_real_time" , tmp_real_time)
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
