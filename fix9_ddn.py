@@ -498,10 +498,11 @@ def main():
        tmp_string_realtime = str(date) + " " + str(current_time)
        tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
        print("tmp_real_time" , tmp_real_time)
+       tmp_currt_time = datetime.now()
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
        else :
-           elapsed = tmp_real_time
+           elapsed = dt.datetime.now()
        print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or elapsed < dt.timedelta(minutes=2)):
            if (flag_kirim == 0):
