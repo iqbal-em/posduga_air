@@ -491,7 +491,7 @@ def main():
         #Cek apakah ada update jadwal pengiriman
         #Jika tidak ada maka ambil dari status siaga
        
-       date1 = datetime.now().date
+       date1 = datetime.now().date()
        print("date1", date1)
        tmp_string = str(date1) + " " + jadwal_pengiriman
        
