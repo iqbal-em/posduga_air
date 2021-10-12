@@ -498,7 +498,6 @@ def main():
        
        date1 = datetime.now().date()
        #print("date1", date1)
-       print(jadwal_pengiriman)
        if (status_response == 0):
            tmp_jadwal_pengiriman = str(date1) + " " + jadwal_pengiriman
            tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
