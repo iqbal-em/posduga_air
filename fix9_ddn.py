@@ -504,6 +504,7 @@ def main():
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
        else :
+           elapsed = tmp_real_time
            elapsed.minute = 3
        print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or elapsed.minute < 2):
