@@ -513,7 +513,7 @@ def main():
            flag_data_kirim = 1
        else :
            
-           elapsed = tmp_real_time
+           elapsed = tmp_real_time.time()
            print("elapsed :",elapsed)
        #print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=2) and flag_data_kirim == 1 and elapsed.hour == 0)):
