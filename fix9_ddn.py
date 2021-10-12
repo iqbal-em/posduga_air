@@ -501,7 +501,7 @@ def main():
        if (tmp_real_time > tmp_jadwal_pengiriman):
            elapsed = tmp_real_time - tmp_jadwal_pengiriman
        else :
-           elapsed =10000
+           elapsed = tmp_real_time
        if (str(current_time) == jadwal_pengiriman or elapsed < dt.timedelta(minutes=2)):
            if (flag_kirim == 0):
                flag_kirim = 1
