@@ -320,6 +320,7 @@ def kirim_data_full():
     #insert.kirim_data_local(ketinggian_air_fix, path)
     
     hostname = "posduga.sysable.io"
+    print("cek url db local", check_url(hostname))
     if(check_url(hostname) == 0  ):
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
@@ -334,6 +335,7 @@ def kirim_data_full():
       #print("Full response" , response.__dict__)
       jadwal_pengiriman = response
       status1 = 0
+    
     elif(check_url(hostname) == 512) :
         status1  = 1
         if flag_status == 0 :
