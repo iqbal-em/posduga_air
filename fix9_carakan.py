@@ -335,6 +335,12 @@ def kirim_data_full():
       jadwal_pengiriman = response
       status1 = 0
     else :
+        if(check_ping()) == 0 :
+            buffer_img = compress_img('img.png')
+            #print("waktu :" + converter_json(current_time))
+          #print("Response :" + response)
+        else :
+          buffer_img = " "
         status1  = 1
         if flag_status == 0 :
             jadwal_pengiriman = waktu_pengiriman
