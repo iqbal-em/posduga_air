@@ -404,6 +404,8 @@ def main():
        time.sleep(1)
        if (i == 0):
            last_kalibrasi = ketinggian_air #kalibrasi ketika nilai sensor tidak stabil
+           last_ketinggian_air = ketinggian_air
+           ketinggian_air_fix =ketinggian_air
        if ((ketinggian_air < last_kalibrasi) and (last_kalibrasi != 0)): #mencari nilai paling kecil dari 10 data kalibrasi
            last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
            last_kalibrasi = ketinggian_air 
