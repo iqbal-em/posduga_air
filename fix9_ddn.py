@@ -408,7 +408,7 @@ def main():
            last_ketinggian_air = ketinggian_air #last ketinggian air digunakan untuk variabel filter
            last_kalibrasi = ketinggian_air 
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
-       print(last_ketinggian_air)  
+       print(ketinggian_air)  
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
