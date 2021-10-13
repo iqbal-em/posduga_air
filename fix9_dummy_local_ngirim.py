@@ -258,6 +258,7 @@ def cek_data_local() :
 
     for x in temp_data_local:
         data_fix = {"foto_cam":x[2],"ketinggian_air":x[1],"imei":imei, "waktu":x[3], "tanggal":x[4] }
+        print(data_fix)
         kirim_data_local_server(data_fix)
         ubah_data_local(x(0))
     
