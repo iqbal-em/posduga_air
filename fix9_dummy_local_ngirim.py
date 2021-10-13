@@ -321,7 +321,7 @@ def kirim_data_full():
     
     hostname = "posduga.sysable.io"
     print("cek url db local", check_url(hostname))
-    if(check_url(hostname) == 0  ):
+    if(check_url(hostname) == 512  ):
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
@@ -336,7 +336,7 @@ def kirim_data_full():
       jadwal_pengiriman = response
       status1 = 0
     
-    elif(check_url(hostname) == 512) :
+    elif(check_url(hostname) == 0) :
         status1  = 1
         if flag_status == 0 :
             jadwal_pengiriman = waktu_pengiriman
