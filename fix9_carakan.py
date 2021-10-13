@@ -411,7 +411,8 @@ def main():
            last_kalibrasi = ketinggian_air 
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
        print(ketinggian_air)  
-
+   print("Hasil Kalibrasi Ketinggian sensor", ketinggian_air_fix)
+   
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        get_data_durasi() #cek jadwal pengiriman ketika booting
