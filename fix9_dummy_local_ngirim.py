@@ -260,7 +260,7 @@ def cek_data_local() :
         data_fix = {"foto_cam":x[2],"ketinggian_air":x[1],"imei":imei, "waktu":x[3], "tanggal":x[4] }
         print(data_fix)
         kirim_data_local_server(data_fix)
-        ubah_data_local(x(0))
+        ubah_data_local(x[0])
     
 
 def ambil_data_local_terakhir() :
@@ -528,7 +528,6 @@ def main():
            #print("elapsed :",elapsed)
        else :
            elapsed = timedelta(minutes=5)
-           
        #print("elapsed :",elapsed)
        if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=3) and flag_data_kirim == 1 )):
            print("elapsed :",elapsed)
