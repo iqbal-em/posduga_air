@@ -519,7 +519,7 @@ def main():
            elapsed = timedelta(minutes=5)
            
        #print("elapsed :",elapsed)
-       if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=2) and flag_data_kirim == 1 and elapsed < timedelta(hours=1) )):
+       if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=3) and flag_data_kirim == 1 )):
            flag_data_kirim = 0
            if (flag_kirim == 0):
                flag_kirim = 1
