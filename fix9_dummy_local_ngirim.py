@@ -196,9 +196,9 @@ def kirim_data_local_server(data_fix):
     try:
         r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
-        data = json.loads(data)
-        status = str(data['status']) 
-        print(status) 
+        #data = json.loads(data)
+        #status = str(data['status']) 
+        print(data) 
         r.close()
         print("Response Kirim data Lokal : ", r)
 
