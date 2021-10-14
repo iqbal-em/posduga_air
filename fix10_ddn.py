@@ -271,7 +271,6 @@ def ubah_data_local(x) :
     curs.execute("update data set status = 0 where id = %s",(x))
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute("")
     db.commit()
     print("ubah data", db)
 

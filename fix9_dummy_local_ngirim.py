@@ -240,7 +240,6 @@ def ubah_data_local(x) :
     curs.execute(sql,x)
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute("")
     db.commit()
     print("ubah data", db)
 
