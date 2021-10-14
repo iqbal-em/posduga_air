@@ -294,7 +294,7 @@ def ambil_data_local_terakhir() :
     db.commit()
     #print(db)
     data_dict = {}
-    print("Ambil Data Terakhir", db)
+    #print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
     #return temp_data_local[6]
     print(temp_data_local[4])
@@ -558,7 +558,7 @@ def main():
        print(jadwal_pengiriman)
        if (current_time == jadwal_pengiriman  ) :
 
-           #print("Saatnya Kirim data")
+           print("Saatnya Kirim data")
            
            #kirim_data_full()
            
