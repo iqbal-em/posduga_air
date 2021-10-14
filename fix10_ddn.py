@@ -546,23 +546,19 @@ def main():
        crt = now = datetime.now()
        if (tmp == crt ):
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
-           print("status flag waktu 1")
-
-       elif (int(time.strftime("%M", t))<30):
-           jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
-           print("status flag waktu 2")
+           #print("status flag waktu 2")
 
        elif (str((time.strftime("%M", t))) == "00"):
            jadwal_pengiriman = crt
-           print("status flag waktu 3")
+           #print("status flag waktu 3")
        else :
            jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
-           print("status flag waktu 4")
+           #print("status flag waktu 4")
             
        print(jadwal_pengiriman)
        if (current_time == jadwal_pengiriman  ) :
 
-           print("Saatnya Kirim data")
+           #print("Saatnya Kirim data")
            
            #kirim_data_full()
            
