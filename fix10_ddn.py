@@ -435,7 +435,7 @@ def main():
    flag_data_kirim = 0
    flag = 0
    pi = pigpio.pi()
-   time.sleep(5)
+   time.sleep(1)
    for i in range(10):
        p1 = PWM_read(pi, 12 )
        time.sleep(1)
@@ -583,13 +583,12 @@ def main():
                elapsed = timedelta(minutes=5)
            
        #print(jadwal_pengiriman)
-       if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
-           
-           print("Saatnya Kirim data")
-           flag = 1
-           kirim_data_full()
-       else :
-	       flag = 0
+           if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
+               print("Saatnya Kirim data")
+               flag = 1
+               kirim_data_full()
+           else :
+               flag = 0
            
 
 
