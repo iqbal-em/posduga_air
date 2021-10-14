@@ -292,7 +292,7 @@ def ambil_data_local_terakhir() :
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
     curs.execute("SELECT * FROM data ORDER BY id DESC LIMIT 0, 1")
     db.commit()
-    print(db)
+    #print(db)
     data_dict = {}
     print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
