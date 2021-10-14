@@ -163,19 +163,23 @@ def kirim_data(data,img, waktu, tanggal):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
         data = json.loads(data)
-        
-        # = str(data['next_schedule_sentdata'])
-        #print(jadwal_pengiriman)
+       
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
         status = str(data['status']) 
         print(data) 
-        #print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
+        print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
         if (status == "500"):
             status_response = 1
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
             print("Response 500")
             #kirim_data_full() #jika data kekirim, looping kirim data
+            with open('/var/tmp/testing.log', 'a') as fp:
+                img = "data:image/png;base64," #simpan data payload
+                data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                print(data, 'done', file=fp) #simpan response pengiriman 
+                print(data_fix, 'done', file=fp)
+                #time.sleep(2)
 
         else :
             status_response = 0
@@ -261,10 +265,11 @@ def get_data_durasi():
 def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
-    curs.execute("update data set status = 0 where id = %s",(x))
+    tmp = (x,)
+    sql = """update data set status = 0 where id = %s"""
+    curs.execute(sql,tmp)
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute("")
     db.commit()
     print("ubah data", db)
 
@@ -553,18 +558,35 @@ def main():
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 2")
        else :
-           if (int(time.strftime("%H", t)) != 24):
+           if (int(time.strftime("%H", t)) != 00):
                jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            else :
                jadwal_pengiriman = "00:00:00"
            #print("status flag waktu 4")
        print(jadwal_pengiriman)
+
+       tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
+       tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+
+       #print("tmp_string" , tmp_jadwal_pengiriman)
+       tmp_string_realtime = str(date) + " " + str(current_time)
+       tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
+       #print("tmp_real_time" , tmp_real_time
+       if (tmp_real_time > tmp_jadwal_pengiriman):
+           elapsed = tmp_real_time - tmp_jadwal_pengiriman
+           flag_data_kirim = 1
+           #print("elapsed :",elapsed)
+       else :
+           elapsed = timedelta(minutes=5)
+           
        #print(jadwal_pengiriman)
-       if (current_time == jadwal_pengiriman and flag == 0 ) :
+       if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
            
            print("Saatnya Kirim data")
            flag = 1
            kirim_data_full()
+       elif((elapsed < timedelta(minutes=1))):
+           flag = 1
        else :
 	       flag = 0
            
