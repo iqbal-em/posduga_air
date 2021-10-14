@@ -429,6 +429,7 @@ def cek_siaga_init():
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, count
    data_millis = round(int(time.time() * 1000))
+   data_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
    flag_data_kirim = 0
