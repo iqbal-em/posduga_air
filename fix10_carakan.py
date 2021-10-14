@@ -585,6 +585,7 @@ def main():
            print("Saatnya Kirim data")
            flag = 1
            kirim_data_full()
+           time.sleep(60)
        else :
 	       flag = 0
            
