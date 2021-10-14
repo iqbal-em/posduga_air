@@ -356,7 +356,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman)
+    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
