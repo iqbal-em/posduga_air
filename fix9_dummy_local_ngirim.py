@@ -256,7 +256,6 @@ def cek_data_local() :
     data_dict = {}
     print("ubah data", db)
     temp_data_local = curs.fetchall()
-    temp_data_local = temp_data_local[0]
     for x in temp_data_local:
         data_fix = {"foto_cam":x[2],"ketinggian_air":x[1],"imei":imei, "waktu":x[3], "tanggal":x[4] }
         #print("data sini",data_fix)
