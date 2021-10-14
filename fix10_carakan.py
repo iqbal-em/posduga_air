@@ -585,8 +585,6 @@ def main():
            print("Saatnya Kirim data")
            flag = 1
            kirim_data_full()
-       elif((elapsed < timedelta(minutes=1))):
-           flag = 1
        else :
 	       flag = 0
            
