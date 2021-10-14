@@ -236,7 +236,7 @@ def get_data_durasi():
 def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
-    tmp = (x,)
+    tmp = (str(x),)
     sql = """update data set status = 0 where id = %s"""
     curs.execute(sql,x)
     #kirim data lokal
