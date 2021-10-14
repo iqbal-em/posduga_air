@@ -192,7 +192,7 @@ def kirim_data(data,img, waktu, tanggal):
     
     
 def kirim_data_local_server(data_fix):
-    
+    print("cek data",data_fix)
     try:
         r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
