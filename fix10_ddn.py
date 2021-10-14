@@ -427,7 +427,7 @@ def main():
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
    flag_data_kirim = 0
-   flag = 0
+   flag = 1
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
@@ -559,10 +559,10 @@ def main():
            #print("status flag waktu 4")
        print(jadwal_pengiriman)
        #print(jadwal_pengiriman)
-       if (current_time == jadwal_pengiriman and flag == 1 ) :
+       if (current_time == jadwal_pengiriman and flag == 0 ) :
            
            print("Saatnya Kirim data")
-           
+           flag = 1
            kirim_data_full()
        else :
 	       flag = 0
