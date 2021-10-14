@@ -211,7 +211,31 @@ def kirim_data_local_server(data_fix):
         print('Kirim ulang data local', file=fp) #simpan response pengiriman 
         print(data, 'done', file=fp) #simpan response pengiriman 
         #time.sleep(2)
+
+def get_jadwal_pengiriman(device_id,status_siaga,count) :
+
+    db = MySQLdb.connect("localhost", "root", "", "posduga_air")
+    curs=db.cursor()
+
+    query = """select * from jadwal_devices where device_id = %s and level = %s"""
+    tmp_data = (device_id,status_siaga,)
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    curs.execute (query,tmp_data)
     
+    for x in temp_data_local:
+        data_fix = {"foto_cam":x(2),"ketinggian_air":x(1),"imei":imei, "waktu":x(3), "tanggal":x(4) }
+        kirim_data_local_server(data_fix)
+        ubah_data_local(x(0))
+
+    db.commit()
+    print ("Data committed")
+    temp_data_local = curs.fetchall()
+
+    #temp_datalocal = temp_data_local[count][3]
+    #minpos = delta.index(min(delta))
+    
+    return temp_data_local
+
 def get_data_durasi():
     global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman
     try : 
@@ -272,7 +296,11 @@ def ambil_data_local_terakhir() :
     data_dict = {}
     print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
-    return temp_data_local[6]
+    #return temp_data_local[6]
+    print(temp_data_local[4])
+    tmp = temp_data_local[4] + " " + temp_data_local[3]
+    tmp_jadwal_pengiriman = datetime.strptime(tmp, '%Y-%m-%d %H:%M:%S')
+    return tmp_jadwal_pengiriman
 
 def kirim_data_full():
    
@@ -398,7 +426,7 @@ def cek_siaga_init():
     
 
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, count
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
@@ -418,10 +446,12 @@ def main():
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
        print(ketinggian_air)  
    print("Hasil Kalibrasi Ketinggian sensor", ketinggian_air_fix)  
+   data_pengiriman = get_jadwal_pengiriman
+   
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
-       get_data_durasi() #cek jadwal pengiriman ketika booting
+       #get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
        current_millis = round(int(time.time() * 1000))
@@ -430,9 +460,6 @@ def main():
        crt_time = dt.datetime.now()
        date = dt.datetime.now().date()
        
-       
-       if (current_time >= jadwal_pengiriman  ) :
-           kirim_data_full()
            #update data jadwal_pengiriman
           
 
@@ -486,7 +513,8 @@ def main():
               print("flag_status: ", flag_status)
               tmp_current_time = crt_time + timedelta(hours = 6)
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
-    
+
+              
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               inc = inc + 1 
               if (inc > 4):
@@ -496,7 +524,8 @@ def main():
                       print("perubahan status")
                       kirim_data_full()
                       last_flag_status = flag_status    
-              
+          
+           
 
               
           else :
@@ -506,25 +535,37 @@ def main():
           with open('/var/tmp/data_sensor.log', 'a') as fp:
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
+
         #Cek apakah ada update jadwal pengiriman
         #Jika tidak ada maka ambil dari status siaga
        
        
            
        #print("elapsed :",elapsed)
-       if (str(current_time) == jadwal_pengiriman or (elapsed < timedelta(minutes=3) and flag_data_kirim == 1 )):
-           print("elapsed :",elapsed)
-           flag_data_kirim = 0
-           if (flag_kirim == 0):
-               flag_kirim = 1
-               #waktu_pengiriman = jadwal_pengiriman
-               kirim_data_full()
-               
-           else :
-               print("data sudah dkirim pada jadwal pengiriman :", jadwal_pengiriman )
+       tmp = ambil_data_local_terakhir()
+       crt = now = datetime.now()
+       if (tmp == crt ):
+           jadwal_pengiriman = str(time.strftime("%H")) + str(int(time.strftime("%M", t))+30) + ":00"
+           print("status flag waktu 1")
+
+       elif (int(time.strftime("%M", t))<30):
+           jadwal_pengiriman = str(time.strftime("%H")) + str(int(time.strftime("%M", t))+30) + ":00"
+           print("status flag waktu 2")
+
+       elif (str((time.strftime("%M", t))) == "00"):
+           jadwal_pengiriman = crt
+           print("status flag waktu 3")
        else :
-           flag_kirim = 0
-         
+           jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
+           print("status flag waktu 4")
+            
+       
+       if (current_time == jadwal_pengiriman  ) :
+
+           print("Saatnya Kirim data")
+           
+           #kirim_data_full()
+           
 
 
 if __name__ == '__main__':
