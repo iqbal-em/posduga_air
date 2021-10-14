@@ -568,8 +568,8 @@ def main():
            print("Saatnya Kirim data")
            
            #kirim_data_full()
-      else :
-	   flag = 0
+       else :
+	       flag = 0
            
 
 
