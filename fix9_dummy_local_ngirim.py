@@ -238,7 +238,7 @@ def ubah_data_local(x) :
     curs=db.cursor()
     tmp = (x,)
     sql = """update data set status = 0 where id = %s"""
-    curs.execute(sql,x)
+    curs.execute(sql,tmp)
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
     db.commit()
