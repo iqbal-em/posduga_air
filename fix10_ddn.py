@@ -294,7 +294,7 @@ def ambil_data_local_terakhir() :
     db.commit()
     #print(db)
     data_dict = {}
-    #print("Ambil Data Terakhir", db)
+    print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
     #return temp_data_local[6]
     print(temp_data_local[4])
@@ -545,6 +545,10 @@ def main():
        tmp = ambil_data_local_terakhir()
        crt = now = datetime.now()
        if (tmp == crt ):
+           jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
+           #print("status flag waktu 1")
+
+       elif (int(time.strftime("%M", t))<30):
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 2")
 
