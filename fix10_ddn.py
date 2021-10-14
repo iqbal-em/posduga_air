@@ -553,7 +553,7 @@ def main():
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 2")
        else :
-           if (int(time.strftime("%H", t)) != 24):
+           if (int(time.strftime("%H", t)) != 00):
                jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            else :
                jadwal_pengiriman = "00:00:00"
@@ -580,6 +580,8 @@ def main():
            print("Saatnya Kirim data")
            flag = 1
            kirim_data_full()
+       elif((elapsed < timedelta(minutes=1))):
+           flag = 1
        else :
 	       flag = 0
            
