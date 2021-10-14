@@ -237,6 +237,7 @@ def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
     tmp = (str(x))
+    print("asd",tmp)
     sql = """update data set status = 0 where id = %s"""
     curs.execute(sql,x)
     #kirim data lokal
@@ -261,7 +262,7 @@ def cek_data_local() :
         #print("data sini",data_fix)
         kirim_data_local_server(data_fix)
         print("ID",x[0])
-        ubah_data_local(x[0])
+        ubah_data_local(str(x[0]))
 
 def ambil_data_local_terakhir() :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
