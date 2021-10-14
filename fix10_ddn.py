@@ -428,7 +428,7 @@ def cek_siaga_init():
 
 def main():
    global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, count
-   pwm_millis = round(int(time.time() * 1000))
+   data_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
    flag_data_kirim = 0
@@ -548,36 +548,38 @@ def main():
        crt = datetime.now()
        
        print(str(time.strftime("%M")))
-       if (tmp == crt ):
-           jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
+       if (current_millis -  data_millis > 60000):
+           data_millis = current_millis
+           if (tmp == crt ):
+               jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 1")
-       elif (str((time.strftime("%M", t))) == "00"):
-           jadwal_pengiriman = current_time
+           elif (str((time.strftime("%M", t))) == "00"):
+               jadwal_pengiriman = current_time
            #print("status flag waktu 3")
-       elif (int(time.strftime("%M", t))<=30):
-           jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
+           elif (int(time.strftime("%M", t))<=30):
+               jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 2")
-       else :
-           if (int(time.strftime("%H", t)) != 00):
-               jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            else :
-               jadwal_pengiriman = "00:00:00"
+               if (int(time.strftime("%H", t)) != 00):
+                   jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
+               else :
+                   jadwal_pengiriman = "00:00:00"
            #print("status flag waktu 4")
-       print(jadwal_pengiriman)
+           print(jadwal_pengiriman)
 
-       tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
-       tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+           tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
+           tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
 
        #print("tmp_string" , tmp_jadwal_pengiriman)
-       tmp_string_realtime = str(date) + " " + str(current_time)
-       tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
+           tmp_string_realtime = str(date) + " " + str(current_time)
+           tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
        #print("tmp_real_time" , tmp_real_time
-       if (tmp_real_time > tmp_jadwal_pengiriman):
-           elapsed = tmp_real_time - tmp_jadwal_pengiriman
-           flag_data_kirim = 1
+           if (tmp_real_time > tmp_jadwal_pengiriman):
+               elapsed = tmp_real_time - tmp_jadwal_pengiriman
+               flag_data_kirim = 1
            #print("elapsed :",elapsed)
-       else :
-           elapsed = timedelta(minutes=5)
+           else :
+               elapsed = timedelta(minutes=5)
            
        #print(jadwal_pengiriman)
        if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
