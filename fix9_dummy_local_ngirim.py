@@ -236,7 +236,7 @@ def get_data_durasi():
 def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
-    curs.execute("update data set status = 0 where id = %s",(x))
+    curs.execute("update data set status = 0 where id = %s",x)
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
     curs.execute("")
@@ -260,6 +260,7 @@ def cek_data_local() :
         data_fix = {"foto_cam":x[2],"ketinggian_air":x[1],"imei":imei, "waktu":x[3], "tanggal":x[4] }
         print("data sini",data_fix)
         kirim_data_local_server(data_fix)
+        print("ID",x[0])
         ubah_data_local(x[0])
     
 
