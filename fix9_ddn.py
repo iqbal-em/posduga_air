@@ -276,7 +276,7 @@ def ambil_data_local_terakhir() :
 
 def kirim_data_full():
    
-    global  current_time, date, status, waktu_pengiriman
+    global  current_t   ime, date, status, waktu_pengiriman
     print("Ketinggian_air_fix",ketinggian_air_fix)
     print("flag_status", flag_status)
     status = 0
