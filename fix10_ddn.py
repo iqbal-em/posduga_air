@@ -549,7 +549,7 @@ def main():
            print("status flag waktu 1")
 
        elif (int(time.strftime("%M", t))<30):
-           jadwal_pengiriman = str(time.strftime("%H")) + str(int(time.strftime("%M", t))+30) + ":00"
+           jadwal_pengiriman = str(time.strftime("%H")) +":"+ str(int(time.strftime("%M", t))+30) + ":00"
            print("status flag waktu 2")
 
        elif (str((time.strftime("%M", t))) == "00"):
