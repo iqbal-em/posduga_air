@@ -552,7 +552,7 @@ def main():
            jadwal_pengiriman = current_time
            #print("status flag waktu 3")
 
-       elif (int(time.strftime("%M", t))<30):
+       elif (int(time.strftime("%M", t))<=30):
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 2")
 
