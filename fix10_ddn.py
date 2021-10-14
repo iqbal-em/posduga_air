@@ -294,7 +294,7 @@ def ambil_data_local_terakhir() :
     db.commit()
     #print(db)
     data_dict = {}
-    print("Ambil Data Terakhir", db)
+    #print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
     #return temp_data_local[6]
     print(temp_data_local[4])
