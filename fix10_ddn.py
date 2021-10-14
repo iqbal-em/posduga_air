@@ -557,10 +557,10 @@ def main():
        else :
            jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            #print("status flag waktu 4")
-            
+       print(jadwal_pengiriman)
        #print(jadwal_pengiriman)
        if (current_time == jadwal_pengiriman and flag == 1 ) :
-           print(jadwal_pengiriman)
+           
            print("Saatnya Kirim data")
            
            kirim_data_full()
