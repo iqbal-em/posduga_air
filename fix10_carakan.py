@@ -583,7 +583,7 @@ def main():
                elapsed = timedelta(minutes=5)
            
        #print(jadwal_pengiriman)
-           if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
+           if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1,seconds=30) and flag == 0) ) :
                print("Saatnya Kirim data")
                flag = 1
                kirim_data_full()
