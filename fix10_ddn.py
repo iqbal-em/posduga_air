@@ -297,7 +297,7 @@ def ambil_data_local_terakhir() :
     #print("Ambil Data Terakhir", db)
     temp_data_local = curs.fetchone()
     #return temp_data_local[6]
-    print(temp_data_local[4])
+    #print(temp_data_local[4])
     tmp = temp_data_local[4] + " " + temp_data_local[3]
     tmp_jadwal_pengiriman = datetime.strptime(tmp, '%Y-%m-%d %H:%M:%S')
     return tmp_jadwal_pengiriman
@@ -431,6 +431,7 @@ def main():
    print("Initiate Kalibrasi Sensor ......")
    flag_kirim = 0
    flag_data_kirim = 0
+   flag = 0
    pi = pigpio.pi()
    time.sleep(5)
    for i in range(10):
@@ -543,7 +544,9 @@ def main():
            
        #print("elapsed :",elapsed)
        tmp = ambil_data_local_terakhir()
-       crt = now = datetime.now()
+       crt = datetime.now()
+       
+       print(str(time.strftime("%M")))
        if (tmp == crt ):
            jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
            #print("status flag waktu 1")
@@ -553,18 +556,20 @@ def main():
            #print("status flag waktu 2")
 
        elif (str((time.strftime("%M", t))) == "00"):
-           jadwal_pengiriman = crt
+           jadwal_pengiriman = current_time
            #print("status flag waktu 3")
        else :
            jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            #print("status flag waktu 4")
             
-       print(jadwal_pengiriman)
-       if (current_time == jadwal_pengiriman  ) :
-
+       #print(jadwal_pengiriman)
+       if (current_time == jadwal_pengiriman and flag == 1 ) :
+           print(jadwal_pengiriman)
            print("Saatnya Kirim data")
            
            #kirim_data_full()
+      else :
+	   flag = 0
            
 
 
