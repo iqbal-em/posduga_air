@@ -163,6 +163,7 @@ def kirim_data(data,img, waktu, tanggal):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
         data = json.loads(data)
+        
         jadwal_pengiriman = str(data['next_schedule_sentdata'])
         print(jadwal_pengiriman)
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
@@ -360,7 +361,7 @@ def kirim_data_full():
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
-      jadwal_pengiriman = response
+      #jadwal_pengiriman = response
       status1 = 0
     else :
         if(check_ping()) == 0 :
@@ -370,11 +371,6 @@ def kirim_data_full():
         else :
           buffer_img = " "
         status1  = 1
-        if flag_status == 0 :
-            jadwal_pengiriman = waktu_pengiriman
-        
-        else :
-            jadwal_pengiriman = waktu_pengiriman
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()

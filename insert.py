@@ -5,7 +5,7 @@ import MySQLdb
 import time
 
 
-def kirim_data_local(tanggal, waktu, ketinggian_air, img, status, next_jadwal) :
+def kirim_data_local(tanggal, waktu, ketinggian_air, img, status, next_jadwal,imei) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor() 
     #kirim data lokal
@@ -19,8 +19,8 @@ def kirim_data_local(tanggal, waktu, ketinggian_air, img, status, next_jadwal) :
     img = "data:image/png;base64," + str(img)
     
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
-    curs.execute ("""INSERT INTO data(ketinggian_air,data_cam,waktu,tanggal,status,next_jadwal)
-            values(%s, %s,%s,%s,%s,%s)""",(ketinggian_air, img, waktu, tanggal, status, next_jadwal))
+    curs.execute ("""INSERT INTO data(ketinggian_air,data_cam,waktu,tanggal,status,next_jadwal,imei)
+            values(%s, %s,%s,%s,%s,%s,&s)""",(ketinggian_air, img, waktu, tanggal, status, next_jadwal,imei))
 
     db.commit()
     print ("kirim data local",db)
