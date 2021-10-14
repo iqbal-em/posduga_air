@@ -559,8 +559,23 @@ def main():
                jadwal_pengiriman = "00:00:00"
            #print("status flag waktu 4")
        print(jadwal_pengiriman)
+
+       tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
+       tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+
+       #print("tmp_string" , tmp_jadwal_pengiriman)
+       tmp_string_realtime = str(date) + " " + str(current_time)
+       tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
+       #print("tmp_real_time" , tmp_real_time
+       if (tmp_real_time > tmp_jadwal_pengiriman):
+           elapsed = tmp_real_time - tmp_jadwal_pengiriman
+           flag_data_kirim = 1
+           #print("elapsed :",elapsed)
+       else :
+           elapsed = timedelta(minutes=5)
+           
        #print(jadwal_pengiriman)
-       if (current_time == jadwal_pengiriman and flag == 0 ) :
+       if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1) and flag == 0) ) :
            
            print("Saatnya Kirim data")
            flag = 1
