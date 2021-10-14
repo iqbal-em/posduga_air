@@ -464,7 +464,7 @@ def main():
           
 
        if (current_millis - pwm_millis) > 10000 : #setiap 10 detik baca data sensor untuk melakukan filtering
-          print(jadwal_pengiriman)
+          
           p1 = PWM_read(pi, 12)
           time.sleep(1)
           print("Current Time : " + current_time)
@@ -559,7 +559,7 @@ def main():
            jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
            print("status flag waktu 4")
             
-       
+       print(jadwal_pengiriman)
        if (current_time == jadwal_pengiriman  ) :
 
            print("Saatnya Kirim data")
