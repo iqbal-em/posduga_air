@@ -97,7 +97,7 @@ def check_url(hostname):
 def compress_img(nama_file): #compress image
    file_name = 'image-4-compressed.jpg'
    im = Image.open(nama_file)
-   im.save(file_name,optimize=True,quality=20)
+   im.save(file_name,optimize=True,quality=15)
    with open(file_name,"rb") as im:
        img_base64 =  base64.b64encode(im.read()).decode('utf-8')
        return img_base64
