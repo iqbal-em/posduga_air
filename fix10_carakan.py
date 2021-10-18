@@ -355,19 +355,21 @@ def kirim_data_full():
     
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
+      status1 = 0
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
-
+          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           #print("Response :" + response)
       else :
           buffer_img = " "
+          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
       #jadwal_pengiriman = response
-      status1 = 0
+      
     else :
         if(check_ping()) == 0 :
             buffer_img = compress_img('img.png')
@@ -376,6 +378,9 @@ def kirim_data_full():
         else :
           buffer_img = " "
         status1  = 1
+        insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
+
+        
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
@@ -384,8 +389,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-
+    
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
 
