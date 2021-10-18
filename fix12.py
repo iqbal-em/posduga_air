@@ -97,7 +97,7 @@ def check_url(hostname):
 def compress_img(nama_file): #compress image
    file_name = 'image-4-compressed.jpg'
    im = Image.open(nama_file)
-   im.save(file_name,optimize=True,quality=15)
+   im.save(file_name,optimize=True,quality=20)
    with open(file_name,"rb") as im:
        img_base64 =  base64.b64encode(im.read()).decode('utf-8')
        return img_base64
@@ -241,27 +241,6 @@ def get_jadwal_pengiriman(device_id,status_siaga,count) :
     
     return temp_data_local
 
-def get_data_durasi():
-    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman
-    try : 
-        r =  requests.get(url=url1)
-        data = r.json()
-        siaga1 = data['data'][0]['siaga']['min_siaga_1']
-        siaga2 = data['data'][0]['siaga']['min_siaga_2']
-        siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000 
-        lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
-        lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
-        lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
-        siaga3 = data['data'][0]['siaga']['min_siaga_3']
-        #jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
-        print("jadwal_pengiriman",jadwal_pengiriman)
-        cek_siaga_init()
-        kirim_data_full()
-    except requests.exceptions.ConnectionError:
-        
-        print(r)
-
 def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
@@ -308,6 +287,24 @@ def ambil_data_local_terakhir() :
     tmp_jadwal_pengiriman = datetime.strptime(tmp, '%Y-%m-%d %H:%M:%S')
     return tmp_jadwal_pengiriman
 
+def ambil_data_jadwal(id1,level) :
+    print(level)
+    db = MySQLdb.connect("localhost", "root", "", "posduga_air")
+    curs=db.cursor()
+    #kirim data lokal
+    #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
+    x = (id1,)
+    query = """SELECT * FROM jadwal_devices where device_id = %s"""
+    curs.execute(query,x)
+    db.commit()
+    print(db)
+    data_dict = {}
+    #print("ubah data", db)
+    temp_data_local = curs.fetchall()
+
+    print(temp_data_local[0][3])
+    #print("asdsad",type(temp_data_local[0]))
+
 def kirim_data_full():
    
     global  current_time, date, status, waktu_pengiriman
@@ -352,37 +349,30 @@ def kirim_data_full():
     #path = '/home/pi/img_cctv/%s' , (current_time)
     
     #insert.kirim_data_local(ketinggian_air_fix, path)
-
-
+    
     hostname = "posduga.sysable.io"
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
-      status1 = 0
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
-          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
+
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           #print("Response :" + response)
       else :
           buffer_img = " "
-          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           print(response)
       #print("Full response" , response.__dict__)
       #jadwal_pengiriman = response
-      
+      status1 = 0
     else :
-        status1  = 1
         if(check_ping()) == 0 :
             buffer_img = compress_img('img.png')
-            insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
             #print("waktu :" + converter_json(current_time))
           #print("Response :" + response)
         else :
-          
           buffer_img = " "
-          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-       
+        status1  = 1
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
@@ -391,7 +381,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    
+    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
 
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
@@ -438,6 +428,7 @@ def main():
    data_millis = round(int(time.time() * 1000))
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
+   ambil_jadwal_pengiriman()
    flag_kirim = 0
    flag_data_kirim = 0
    flag = 0
@@ -472,7 +463,7 @@ def main():
        
            #update data jadwal_pengiriman
           
-
+       
        if (current_millis - pwm_millis) > 10000 : #setiap 10 detik baca data sensor untuk melakukan filtering
           
           p1 = PWM_read(pi, 12)
