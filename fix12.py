@@ -633,7 +633,7 @@ def main():
        tmp = ambil_data_local_terakhir()
        crt = datetime.now()
        
-       print(str(time.strftime("%M")))
+       #print(str(time.strftime("%M")))
        if (current_millis -  data_millis > 60000):
            data_millis = current_millis
            print(jadwal_pengiriman)
