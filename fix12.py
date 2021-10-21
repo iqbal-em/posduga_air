@@ -355,6 +355,8 @@ def kirim_data_full():
     current_time = time.strftime("%H:%M:%S", t)
     crt_time = dt.datetime.now()
     date = dt.datetime.now().date()
+
+     
     if flag_status == 0 :
        tmp_current_time = crt_time + timedelta(hours = 6) 
        waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
@@ -656,6 +658,8 @@ def main():
                print("Saatnya Kirim data")
                col = col + 1
                flag_start = 1
+               if (col == len(dict)):
+                   col = 0
                jadwal_pengiriman = dict[flag][col]
                flag = 1
                kirim_data_full()
