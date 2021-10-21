@@ -638,15 +638,13 @@ def main():
            data_millis = current_millis
            print(jadwal_pengiriman)
 
-           tmp_jadwal_pengiriman = str(date) + " " + str(jadwal_pengiriman)
-           tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
 
        #print("tmp_string" , tmp_jadwal_pengiriman)
            tmp_string_realtime = str(date) + " " + str(current_time)
            tmp_real_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
        #print("tmp_real_time" , tmp_real_time
-           if (tmp_real_time > tmp_jadwal_pengiriman):
-               elapsed = tmp_real_time - tmp_jadwal_pengiriman
+           if (tmp_real_time > jadwal_pengiriman):
+               elapsed = tmp_real_time - jadwal_pengiriman
                flag_data_kirim = 1
            #print("elapsed :",elapsed)
            else :
