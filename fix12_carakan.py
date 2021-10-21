@@ -289,7 +289,7 @@ def ambil_data_local_terakhir() :
     return tmp_jadwal_pengiriman
 
 def ambil_data_jadwal(id1) :
-    db = MySQLdb.connect("localhost", "root", "", "posduga_air")
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
     curs=db.cursor()
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
