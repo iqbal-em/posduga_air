@@ -32,9 +32,9 @@ tinggi_sensor = 752
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
 
-siaga1 = 201
-siaga2 = 150
-siaga3 = 100
+siaga1 = 300
+siaga2 = 249
+siaga3 = 119
 set_millis = 0
 lvl_siaga1 = 1800000
 lvl_siaga2 = 3600000
