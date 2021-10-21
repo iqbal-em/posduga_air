@@ -53,6 +53,7 @@ current_time = ""
 date = ""
 waktu_pengiriman = ""
 status_response = 0
+dict = {}
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -287,23 +288,69 @@ def ambil_data_local_terakhir() :
     tmp_jadwal_pengiriman = datetime.strptime(tmp, '%Y-%m-%d %H:%M:%S')
     return tmp_jadwal_pengiriman
 
-def ambil_data_jadwal(id1,level) :
-    print(level)
+def ambil_data_jadwal(id1) :
     db = MySQLdb.connect("localhost", "root", "", "posduga_air")
     curs=db.cursor()
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
     x = (id1,)
-    query = """SELECT * FROM jadwal_devices where device_id = %s"""
+    query = """SELECT level,waktu_pengiriman FROM jadwal_devices where device_id = %s"""
     curs.execute(query,x)
     db.commit()
     print(db)
     data_dict = {}
     #print("ubah data", db)
     temp_data_local = curs.fetchall()
+    #print(temp_data_local)
+    date = dt.datetime.now().date()
+    t = "00:00:00"
+    tmp_string_realtime = str(date) + " " + t
+    tmp_default_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    current_hour = time.strftime("%H", t)
+    current_minute = time.strftime("%M",t)
+    tmplist_jadwal_pengiriman = []
+    dict = {}
+    key  = 1
+    tmp_id = 1
+    
+    for x in temp_data_local:
+        tmp_time = x[1] 
+        #print(tmp_time)
 
-    print(temp_data_local[0][3])
-    #print("asdsad",type(temp_data_local[0]))
+        if (tmp_id == x[0]):
+            tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
+            #tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
+            #print(tmp_hour)
+            
+            if (int(tmp_jadwal_pengiriman.hour) > int(current_hour)):
+                if(int(tmp_jadwal_pengiriman.minute) > int(current_minute)):
+                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+                else :
+                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+        else :
+            #print("tes")
+            tmplist_jadwal_pengiriman.append(tmp_default_time)
+            dict[key] = tmplist_jadwal_pengiriman
+            tmplist_jadwal_pengiriman = []
+            tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
+            if (int(tmp_jadwal_pengiriman.hour) > int(current_hour)):
+                if(int(tmp_jadwal_pengiriman.minute) > int(current_minute)):
+                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+            
+        
+            key = key + 1
+            tmp_id = tmp_id + 1
+        #print(tmp_jadwal_pengiriman.strftime("%H:%M:%S"))
+    #print(dict)
+    tmplist_jadwal_pengiriman.append(tmp_default_time)
+    dict[key] = tmplist_jadwal_pengiriman
+    return dict
+    #return dict
+
+    
+
 
 def kirim_data_full():
    
@@ -424,11 +471,11 @@ def cek_siaga_init():
     
 
 def main():
-   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, count, jadwal_pengiriman
+   global set_millis,status, ketinggian_air, ketinggian_air_fix, last_ketinggian_air, tinggi_sensor, flag_status, last_flag_status, last_kalibrasi, current_time, date, waktu_pengiriman, count, jadwal_pengiriman, dict
    data_millis = round(int(time.time() * 1000))
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
-   ambil_jadwal_pengiriman()
+   dict = ambil_data_jadwal(1)
    flag_kirim = 0
    flag_data_kirim = 0
    flag = 0
@@ -447,7 +494,7 @@ def main():
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
        print(ketinggian_air)  
    print("Hasil Kalibrasi Ketinggian sensor", ketinggian_air_fix)  
-   data_pengiriman = get_jadwal_pengiriman
+   
    
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
@@ -514,6 +561,8 @@ def main():
               print("flag_status: ", flag_status)
               tmp_current_time = crt_time + timedelta(hours = 6)
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+          
+          jadwal_pengiriman = pengecekan_jadwal(dict,flag)
 
               
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
@@ -524,7 +573,8 @@ def main():
                       #time.sleep(1)
                       print("perubahan status")
                       kirim_data_full()
-                      last_flag_status = flag_status    
+                      last_flag_status = flag_status 
+                  dict_tmp = pengecekan_jadwal(flag)  
           
            
 
@@ -537,6 +587,7 @@ def main():
               print(ketinggian_air_fix, last_ketinggian_air, ketinggian_air, current_time, date,flag_status, 'done', file=fp) #simpan data sensor
               time.sleep(1)
 
+          
         #Cek apakah ada update jadwal pengiriman
         #Jika tidak ada maka ambil dari status siaga
        
@@ -549,21 +600,6 @@ def main():
        print(str(time.strftime("%M")))
        if (current_millis -  data_millis > 60000):
            data_millis = current_millis
-           if (tmp == crt ):
-               jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
-           #print("status flag waktu 1")
-           elif (str((time.strftime("%M", t))) == "00"):
-               jadwal_pengiriman = current_time
-           #print("status flag waktu 3")
-           elif (int(time.strftime("%M", t))<=30):
-               jadwal_pengiriman = str(time.strftime("%H")) +":30:00"
-           #print("status flag waktu 2")
-           else :
-               if (int(time.strftime("%H", t)) != 00):
-                   jadwal_pengiriman =  str(int(time.strftime("%H", t))+1) + ":00:00" 
-               else :
-                   jadwal_pengiriman = "00:00:00"
-           #print("status flag waktu 4")
            print(jadwal_pengiriman)
 
            tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
@@ -582,6 +618,7 @@ def main():
            
        #print(jadwal_pengiriman)
            if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
+               
                print("Saatnya Kirim data")
                flag = 1
                kirim_data_full()
