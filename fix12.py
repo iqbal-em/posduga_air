@@ -596,7 +596,7 @@ def main():
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
           
           if (flag_start == 0):
-              col = pengecekan_jadwal(dict,flag)
+              col = pengecekan_jadwal(dict,flag_status)
               jadwal_pengiriman = dict[flag][col]
 
               
