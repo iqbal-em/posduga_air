@@ -597,7 +597,7 @@ def main():
           
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
-              jadwal_pengiriman = dict[flag_status][col]
+              jadwal_pengiriman = str(dict[flag_status][col].time())
 
               
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
@@ -610,7 +610,7 @@ def main():
                       kirim_data_full()
                       last_flag_status = flag_status 
                   col = pengecekan_jadwal(dict,flag_status)
-                  jadwal_pengiriman = dict[flag_status][col].time()
+                  jadwal_pengiriman = str(dict[flag_status][col].time())
           
            
 
@@ -658,7 +658,7 @@ def main():
                flag_start = 1
                if (col == len(dict)):
                    col = 0
-               jadwal_pengiriman = dict[flag_status][col]
+               jadwal_pengiriman = str(dict[flag_status][col].time())
                flag = 1
                kirim_data_full()
            else :
