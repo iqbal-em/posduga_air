@@ -323,28 +323,21 @@ def ambil_data_jadwal(id1) :
             tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
             #tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
             #print(tmp_hour)
-            
-            if (int(tmp_jadwal_pengiriman.hour) > int(current_hour)):
-                if(int(tmp_jadwal_pengiriman.minute) > int(current_minute)):
-                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
-                else :
-                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+            tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+        
         else :
-            #print("tes")
+
             tmplist_jadwal_pengiriman.append(tmp_default_time)
             dict[key] = tmplist_jadwal_pengiriman
             tmplist_jadwal_pengiriman = []
             tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
-            if (int(tmp_jadwal_pengiriman.hour) > int(current_hour)):
-                if(int(tmp_jadwal_pengiriman.minute) > int(current_minute)):
-                    tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
+            tmplist_jadwal_pengiriman.append(tmp_jadwal_pengiriman)
             
         
             key = key + 1
             tmp_id = tmp_id + 1
         #print(tmp_jadwal_pengiriman.strftime("%H:%M:%S"))
     #print(dict)
-    tmplist_jadwal_pengiriman.append(tmp_default_time)
     dict[key] = tmplist_jadwal_pengiriman
     return dict
     #return dict
@@ -468,6 +461,43 @@ def cek_siaga_init():
          print("flag_status: ", flag_status)
          tmp_current_time = crt_time + timedelta(hours = 6)
          waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
+
+def pengecekan_jadwal(dict,flag):
+    
+    date = dt.datetime.now().date()
+    t = "00:00:00"
+    crt_time = dt.datetime.now()
+    tmp_string_realtime = str(date) + " " + t
+    tmp_default_time = datetime.strptime(tmp_string_realtime, '%Y-%m-%d %H:%M:%S')
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    current_hour = time.strftime("%H", t)
+    current_minute = time.strftime("%M",t)
+    col = 0
+    print(dict[flag])
+    for x in dict[flag]:
+        tmp_time = x
+        tmp_time = tmp_time - tmp_default_time
+        tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
+        delta = crt_time - x
+        if (delta < timedelta(minutes=1,seconds = 30)):
+            return col
+    
+            break
+        elif (int(tmp_jadwal_pengiriman.hour) > int(current_hour)):
+                if(int(tmp_jadwal_pengiriman.minute) > int(current_minute)):
+                   
+                    return col
+                    break
+                else:  
+                    
+                    return col
+                    break
+        
+        col = col + 1
+
+        
+        
     
 
 def main():
@@ -478,6 +508,7 @@ def main():
    dict = ambil_data_jadwal(1)
    flag_kirim = 0
    flag_data_kirim = 0
+   flag_start = 0
    flag = 0
    pi = pigpio.pi()
    time.sleep(1)
@@ -562,7 +593,9 @@ def main():
               tmp_current_time = crt_time + timedelta(hours = 6)
               waktu_pengiriman = str(format(tmp_current_time, '%H:%M:%S'))
           
-          jadwal_pengiriman = pengecekan_jadwal(dict,flag)
+          if (flag_start == 0):
+              col = pengecekan_jadwal(dict,flag)
+              jadwal_pengiriman = dict[flag][col]
 
               
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
@@ -574,7 +607,8 @@ def main():
                       print("perubahan status")
                       kirim_data_full()
                       last_flag_status = flag_status 
-                  dict_tmp = pengecekan_jadwal(flag)  
+                  col = pengecekan_jadwal(dict,flag)
+                  jadwal_pengiriman = dict[flag][col].time()
           
            
 
@@ -602,7 +636,7 @@ def main():
            data_millis = current_millis
            print(jadwal_pengiriman)
 
-           tmp_jadwal_pengiriman = str(date) + " " + jadwal_pengiriman
+           tmp_jadwal_pengiriman = str(date) + " " + str(jadwal_pengiriman)
            tmp_jadwal_pengiriman = datetime.strptime(tmp_jadwal_pengiriman, '%Y-%m-%d %H:%M:%S')
 
        #print("tmp_string" , tmp_jadwal_pengiriman)
@@ -620,6 +654,9 @@ def main():
            if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
                
                print("Saatnya Kirim data")
+               col = col + 1
+               flag_start = 1
+               jadwal_pengiriman = dict[flag][col]
                flag = 1
                kirim_data_full()
            else :
