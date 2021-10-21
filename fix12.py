@@ -607,7 +607,7 @@ def main():
                       print("Status :",flag_status, ' Status Changed', file=fp)
                       #time.sleep(1)
                       print("perubahan status")
-                      kirim_data_full()
+                      #kirim_data_full()
                       last_flag_status = flag_status 
                   col = pengecekan_jadwal(dict,flag)
                   jadwal_pengiriman = dict[flag][col].time()
@@ -662,7 +662,7 @@ def main():
                    col = 0
                jadwal_pengiriman = dict[flag][col]
                flag = 1
-               kirim_data_full()
+               #kirim_data_full()
            else :
                flag = 0
            
