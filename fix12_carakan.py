@@ -597,7 +597,7 @@ def main():
           
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
-              jadwal_pengiriman = str(dict[flag_status][col].time())
+              jadwal_pengiriman = dict[flag_status][col]
 
               
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
@@ -610,7 +610,7 @@ def main():
                       kirim_data_full()
                       last_flag_status = flag_status 
                   col = pengecekan_jadwal(dict,flag_status)
-                  jadwal_pengiriman = str(dict[flag_status][col].time())
+                  jadwal_pengiriman = dict[flag_status][col]
           
            
 
@@ -651,14 +651,14 @@ def main():
                elapsed = timedelta(minutes=5)
            
        #print(jadwal_pengiriman)
-           if ((current_time == jadwal_pengiriman and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
+           if ((current_time == str(jadwal_pengiriman.time()) and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
                
                print("Saatnya Kirim data")
                col = col + 1
                flag_start = 1
                if (col == len(dict)):
                    col = 0
-               jadwal_pengiriman = str(dict[flag_status][col].time())
+               jadwal_pengiriman = dict[flag_status][col]
                flag = 1
                kirim_data_full()
            else :
