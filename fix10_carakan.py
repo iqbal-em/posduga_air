@@ -33,8 +33,8 @@ tinggi_sensor = 800
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
 
 siaga1 = 201
-siaga2 = 150
-siaga3 = 100
+siaga2 = 100
+siaga3 = 70
 set_millis = 0
 lvl_siaga1 = 1800000
 lvl_siaga2 = 3600000
@@ -378,8 +378,7 @@ def kirim_data_full():
         else :
           buffer_img = " "
         status1  = 1
-        insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-
+        
         
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
