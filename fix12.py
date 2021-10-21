@@ -476,7 +476,7 @@ def pengecekan_jadwal(dict,flag):
     current_hour = time.strftime("%H", t)
     current_minute = time.strftime("%M",t)
     col = 0
-    print(dict[flag])
+    #print(dict[flag])
     for x in dict[flag]:
         tmp_time = x
         tmp_time = tmp_time - tmp_default_time
