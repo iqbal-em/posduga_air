@@ -630,6 +630,7 @@ def main():
           
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
+              print(col)
               if bool(col):
                   col = 0
 
