@@ -667,10 +667,10 @@ def main():
                print("Saatnya Kirim data")
                col = col + 1
                flag_start = 1
-               if (col == len(dict[flag_status])):
+               if (col == len(dict[flag_status]-1)):
                    col = 0
                    dict = update_dict(dict)
-                   
+
                jadwal_pengiriman = dict[flag_status][col]
                flag = 1
                kirim_data_full()
