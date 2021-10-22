@@ -54,6 +54,7 @@ date = ""
 waktu_pengiriman = ""
 status_response = 0
 dict = {}
+status1 = 1
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -145,7 +146,7 @@ def convertToBinaryData(filename):
     return binaryData
 
 def kirim_data(data,img, waktu, tanggal):
-    global jadwal_pengiriman, status_response
+    global jadwal_pengiriman, status_response, status1
     if (check_ping() == 0):
         img = "data:image/png;base64," + str(img) 
     else :
@@ -170,8 +171,9 @@ def kirim_data(data,img, waktu, tanggal):
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
-        if (status == "500"):
-            status_response = 1
+        if (status == "200"):
+            status_response = 0
+            status1 = 0
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
             print("Response 500")
             #kirim_data_full() #jika data kekirim, looping kirim data
@@ -183,7 +185,8 @@ def kirim_data(data,img, waktu, tanggal):
                 #time.sleep(2)
 
         else :
-            status_response = 0
+            status_response = 1
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -347,7 +350,7 @@ def ambil_data_jadwal(id1) :
 
 def kirim_data_full():
    
-    global  current_time, date, status, waktu_pengiriman
+    global  current_time, date, status, waktu_pengiriman, status1
     print("Ketinggian_air_fix",ketinggian_air_fix)
     print("flag_status", flag_status)
     status = 0
@@ -406,7 +409,6 @@ def kirim_data_full():
           print(response)
       #print("Full response" , response.__dict__)
       #jadwal_pengiriman = response
-      status1 = 0
     else :
         if(check_ping()) == 0 :
             buffer_img = compress_img('img.png')
