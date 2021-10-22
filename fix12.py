@@ -696,7 +696,8 @@ def main():
                if (col == (len(dict[flag_status])-1)):
                    col = 0
                    dict = update_dict(dict)
-               col = col + 1
+               else :
+                   col = col + 1
                jadwal_pengiriman = dict[flag_status][col]
                flag = 1
                kirim_data_full()
