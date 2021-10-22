@@ -400,7 +400,7 @@ def kirim_data_full():
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
-
+          
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
           #print("Response :" + response)
       else :
@@ -610,6 +610,9 @@ def main():
           
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
+              if bool(col):
+                  col = 0
+
               jadwal_pengiriman = dict[flag_status][col]
 
               
