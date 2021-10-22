@@ -569,6 +569,7 @@ def main():
           if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
               ketinggian_air_fix = last_ketinggian_air #filter jika ada data noise yang beda lebih dari 40 dari last_ketinggian_air
               print("filter noise") #Jika iya. maka akan dilakukan filter menggunakan data sebelumnya
+          
           else :
               ketinggian_air_fix = ketinggian_air #update biasa ketinggian air
               last_ketinggian_air = ketinggian_air #update last_ketinggian_air untuk filter selanjutnya
@@ -576,7 +577,7 @@ def main():
              
           print("Ketinggian_air :", ketinggian_air_fix)
           #print("Last_ketinggian:",int(last_ketinggian_air))
-
+          
           p1.cancel()
           
           if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
