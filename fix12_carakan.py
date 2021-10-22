@@ -669,7 +669,7 @@ def main():
                print("Saatnya Kirim data")
                col = col + 1
                flag_start = 1
-               if (col == len(dict[flag_status]-1)):
+               if (col == (len(dict[flag_status])-1)):
                    col = 0
                    dict = update_dict(dict)
 
