@@ -666,7 +666,7 @@ def main():
        #print(jadwal_pengiriman)
            if ((current_time == str(jadwal_pengiriman.time()) and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
                
-               print("Saatnya Kirim data")
+               print("Saatnya Data dikirim")
                col = col + 1
                flag_start = 1
                if (col == (len(dict[flag_status])-1)):
