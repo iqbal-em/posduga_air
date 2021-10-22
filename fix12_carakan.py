@@ -327,7 +327,7 @@ def ambil_data_jadwal(id1) :
         
         else :
 
-            tmplist_jadwal_pengiriman.append(tmp_default_time)
+            #tmplist_jadwal_pengiriman.append(tmp_default_time)
             dict[key] = tmplist_jadwal_pengiriman
             tmplist_jadwal_pengiriman = []
             tmp_jadwal_pengiriman = tmp_default_time + timedelta(seconds = tmp_time.total_seconds())
@@ -498,6 +498,17 @@ def pengecekan_jadwal(dict,flag):
         
         col = col + 1
 
+def update_dict(dict):
+    tmplist_jadwal_pengiriman = []
+    for col in range(1,5):
+        for x in dict[col] :
+            x += timedelta(days=1)
+            tmplist_jadwal_pengiriman.append(x)
+        
+        dict[col] = tmplist_jadwal_pengiriman
+        tmplist_jadwal_pengiriman = []
+    return dict
+
         
         
     
@@ -656,8 +667,10 @@ def main():
                print("Saatnya Kirim data")
                col = col + 1
                flag_start = 1
-               if (col == len(dict)):
+               if (col == len(dict[flag_status])):
                    col = 0
+                   dict = update_dict(dict)
+                   
                jadwal_pengiriman = dict[flag_status][col]
                flag = 1
                kirim_data_full()
