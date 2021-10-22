@@ -32,7 +32,7 @@ tinggi_sensor = 752
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
 
-siaga1 = 249
+siaga1 = 300
 siaga2 = 249
 siaga3 = 119
 set_millis = 0
@@ -256,6 +256,23 @@ def ubah_data_local(x) :
     db.commit()
     print("ubah data", db)
 
+def update_data_db_local(x1):
+    db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
+    curs=db.cursor()
+    query = """SELECT id FROM data ORDER BY id DESC LIMIT 1"""
+    curs.execute(query)
+    db.commit()
+    data_dict = {}
+    temp_data_local = curs.fetchone()
+    x = (x1,int(temp_data_local[0]))
+    query = """UPDATE data SET status =%s where id = %s"""
+    curs.execute(query,x)
+    db.commit()
+    
+    print(temp_data_local[0])
+
+update_data_db_local(0)
+
 
 def cek_data_local() :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
@@ -400,12 +417,15 @@ def kirim_data_full():
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
-
+          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+          update_data_db_local(status1)
           #print("Response :" + response)
       else :
           buffer_img = " "
+          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
           response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+          update_data_db_local(status1)
           print(response)
       #print("Full response" , response.__dict__)
       #jadwal_pengiriman = response
@@ -417,6 +437,7 @@ def kirim_data_full():
         else :
           buffer_img = " "
         status1  = 1
+        insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
         '''with open('/var/tmp/error.log', 'a') as fp:
             current_time = time.strftime("%H:%M:%S", t)
             date = datetime.datetime.now().date()
@@ -425,8 +446,7 @@ def kirim_data_full():
         kirim_data_full()
         '''
     
-    insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-
+   
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
         cek_data_local()
 
@@ -569,7 +589,6 @@ def main():
           if(abs(ketinggian_air - last_ketinggian_air)>40 and last_ketinggian_air != 0 and ketinggian_air != 0):
               ketinggian_air_fix = last_ketinggian_air #filter jika ada data noise yang beda lebih dari 40 dari last_ketinggian_air
               print("filter noise") #Jika iya. maka akan dilakukan filter menggunakan data sebelumnya
-          
           else :
               ketinggian_air_fix = ketinggian_air #update biasa ketinggian air
               last_ketinggian_air = ketinggian_air #update last_ketinggian_air untuk filter selanjutnya
@@ -577,7 +596,7 @@ def main():
              
           print("Ketinggian_air :", ketinggian_air_fix)
           #print("Last_ketinggian:",int(last_ketinggian_air))
-          
+
           p1.cancel()
           
           if(int(ketinggian_air_fix) > siaga1): #pengecekan status berdasarkan ketinggian
@@ -611,6 +630,9 @@ def main():
           
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
+              if bool(col):
+                  col = 0
+
               jadwal_pengiriman = dict[flag_status][col]
 
               
@@ -667,7 +689,7 @@ def main():
        #print(jadwal_pengiriman)
            if ((current_time == str(jadwal_pengiriman.time()) and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
                
-               print("Saatnya Kirim data")
+               print("Saatnya Data dikirim")
                col = col + 1
                flag_start = 1
                if (col == (len(dict[flag_status])-1)):
