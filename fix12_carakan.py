@@ -631,6 +631,7 @@ def main():
           if (flag_start == 0):
               col = pengecekan_jadwal(dict,flag_status)
               if (col is None):
+                  dict = update_dict(dict)
                   col = 0
 
               jadwal_pengiriman = dict[flag_status][col]
