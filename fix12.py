@@ -185,8 +185,13 @@ def kirim_data(data,img, waktu, tanggal):
                 #time.sleep(2)
 
         else :
+            status_data = str(data['status_data'])
+            if (status_data == "200"):
+                status1 = 0
+            else : 
+                status1 = 1
             status_response = 1
-            status1 = 1
+        
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
