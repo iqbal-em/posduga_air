@@ -164,10 +164,10 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-        #data = json.loads(data)
+        data = json.loads(data)
        
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
-        #status = str(data['status']) 
+        status = str(data['status']) 
         #status_data = str(data['status_data'])
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
@@ -187,10 +187,8 @@ def kirim_data(data,img, waktu, tanggal):
 
         else :
             status_response = 1
-            if (status_data == "200"):
-                status1 = 0
-            else :
-                status1 = 1
+            
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
