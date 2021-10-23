@@ -168,7 +168,7 @@ def kirim_data(data,img, waktu, tanggal):
        
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
         status = str(data['status']) 
-        status_data = str(data['status_data'])
+        
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
@@ -185,12 +185,12 @@ def kirim_data(data,img, waktu, tanggal):
                 print(data_fix, 'done', file=fp)
                 #time.sleep(2)
 
+
         else :
-            
-            status_response = 1
+            status_data = str(data['status_data'])
             if (status_data == "200"):
                 status1 = 0
-            else :
+            else : 
                 status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
