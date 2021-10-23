@@ -644,7 +644,7 @@ def main():
               
           if (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status < last_flag_status):
               inc = inc + 1 
-              if (inc > 4):
+              if (inc > 6):
                   with open('/var/tmp/testing.log', 'a') as fp:
                       print("Status :",flag_status, ' Status Changed', file=fp)
                       #time.sleep(1)
