@@ -572,7 +572,7 @@ def main():
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        #get_data_durasi() #cek jadwal pengiriman ketika booting
-   kirim_data_full()
+   #kirim_data_full()
    while True :
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
@@ -702,8 +702,9 @@ def main():
                if (col == (len(dict[flag_status])-1)):
                    col = 0
                    dict = update_dict(dict)
-               else:
-                   jadwal_pengiriman = dict[flag_status][col]
+               else :
+                   col = col + 1
+               jadwal_pengiriman = dict[flag_status][col]
                flag = 1
                kirim_data_full()
            else :
