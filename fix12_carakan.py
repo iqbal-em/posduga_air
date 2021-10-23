@@ -167,8 +167,8 @@ def kirim_data(data,img, waktu, tanggal):
         data = json.loads(data)
        
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
-        status = str(data['status']) 
-        status_data = str(data['status_data'])
+        #status = str(data['status']) 
+        #status_data = str(data['status_data'])
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
