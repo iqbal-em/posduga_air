@@ -168,7 +168,7 @@ def kirim_data(data,img, waktu, tanggal):
        
         #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
         status = str(data['status']) 
-        #status_data = str(data['status_data'])
+        status_data = str(data['status_data'])
         print(data) 
         print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
         r.close()
@@ -186,9 +186,12 @@ def kirim_data(data,img, waktu, tanggal):
                 #time.sleep(2)
 
         else :
-            status_response = 1
             
-            status1 = 1
+            status_response = 1
+            if (status_data == "200"):
+                status1 = 0
+            else :
+                status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -549,7 +552,7 @@ def main():
    flag = 0
    pi = pigpio.pi()
    time.sleep(1)
-   kirim_data_full()
+   
    for i in range(10):
        p1 = PWM_read(pi, 12 )
        time.sleep(1)
@@ -569,7 +572,7 @@ def main():
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        #get_data_durasi() #cek jadwal pengiriman ketika booting
-
+   kirim_data_full()
    while True :
        current_millis = round(int(time.time() * 1000))
        t = time.localtime()
