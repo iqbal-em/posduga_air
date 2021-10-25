@@ -650,6 +650,7 @@ def main():
                       print("Status :",flag_status, ' Status Changed', file=fp)
                       #time.sleep(1)
                       print("perubahan status")
+
                       kirim_data_full()
                       last_flag_status = flag_status 
                   col = pengecekan_jadwal(dict,flag_status)
@@ -695,9 +696,7 @@ def main():
            
        #print(jadwal_pengiriman)
            if ((current_time == str(jadwal_pengiriman.time()) and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
-               
                print("Saatnya Data dikirim")
-               
                flag_start = 1
                if (col == (len(dict[flag_status])-1)):
                    col = 0
