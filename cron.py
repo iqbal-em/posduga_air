@@ -6,7 +6,7 @@ def delete_data_db_local_weekly():
     query = """DELETE FROM data WHERE tanggal < ADDDATE(NOW(),-7)"""
     curs.execute(query)
     db.commit()
-    tes = curs.fetchone()
+    tes = curs.fetchall()
     print(tes)
 
     
