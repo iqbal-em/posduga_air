@@ -671,7 +671,6 @@ def main():
         #Jika tidak ada maka ambil dari status siaga
        
        
-       kirim_data_full()
        #print("elapsed :",elapsed)
        tmp = ambil_data_local_terakhir()
        crt = datetime.now()
