@@ -565,6 +565,7 @@ def main():
            ketinggian_air_fix = ketinggian_air #ketinggian air fix digunakan sebagai variabel fix sensor
        print(ketinggian_air)  
    print("Hasil Kalibrasi Ketinggian sensor", ketinggian_air_fix)  
+   cek_data_local()
    
    
 
