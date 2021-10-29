@@ -681,7 +681,7 @@ def main():
        
            
        #print("elapsed :",elapsed)
-       tmp = ambil_data_local_terakhir()
+       #tmp = ambil_data_local_terakhir()
        crt = datetime.now()
        
        #print(str(time.strftime("%M")))
