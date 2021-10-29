@@ -545,7 +545,7 @@ def main():
    data_millis = round(int(time.time() * 1000))
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
-   dict = ambil_data_jadwal(1)
+   dict = ambil_data_jadwal(3)
    flag_kirim = 0
    flag_data_kirim = 0
    flag_start = 0
