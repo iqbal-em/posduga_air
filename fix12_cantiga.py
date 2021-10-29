@@ -160,7 +160,7 @@ def kirim_data(data,img, waktu, tanggal):
     #print("tes" ,data_fix)
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-            
+        data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(r)
         if data : 
             data = json.loads(data)
