@@ -276,7 +276,7 @@ def update_data_db_local(x1):
     
     print(temp_data_local[0])
 
-update_data_db_local(0)
+#update_data_db_local(0)
 
 
 def cek_data_local() :
