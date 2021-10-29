@@ -164,40 +164,48 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-        data = json.loads(data)
+        if data : 
+            data = json.loads(data)
        
-        #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
-        status = str(data['status']) 
-        print(data) 
-        print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
-        r.close()
-        if (status == "200"):
-            status_response = 0
-            status1 = 0
-            #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
-            print("Response 500")
-            #kirim_data_full() #jika data kekirim, looping kirim data
-            with open('/var/tmp/testing.log', 'a') as fp:
-                img = "data:image/png;base64," #simpan data payload
-                data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-                print(data, 'done', file=fp) #simpan response pengiriman 
-                print(data_fix, 'done', file=fp)
-                #time.sleep(2)
-
-        else :
-            status_data = str(data['status_data'])
-            if (status_data == "200"):
+            #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
+            status = str(data['status']) 
+            print(data) 
+            print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
+            r.close()
+            if (status == "200"):
+                status_response = 0
                 status1 = 0
-            else : 
-                status1 = 1
-            status_response = 1
+                #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
+                #print("Response 500")
+                #kirim_data_full() #jika data kekirim, looping kirim data
+                with open('/var/tmp/testing.log', 'a') as fp:
+                    img = "data:image/png;base64," #simpan data payload
+                    data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                    print(data, 'done', file=fp) #simpan response pengiriman 
+                    print(data_fix, 'done', file=fp)
+                    #time.sleep(2)
+
+            else :
+                status_data = str(data['status_data'])
+                if (status_data == "200"):
+                    status1 = 0
+                else : 
+                    status1 = 1
+                status_response = 1
         
+                with open('/var/tmp/testing.log', 'a') as fp:
+                    img = "data:image/png;base64," #simpan data payload
+                    data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+                    print(data, 'done', file=fp) #simpan response pengiriman 
+                    print(data_fix, 'done', file=fp)
+                #time.sleep(2)
+        else :
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(data, 'done', file=fp) #simpan response pengiriman 
                 print(data_fix, 'done', file=fp)
-                #time.sleep(2)
+                    #time.sleep(2)
         return jadwal_pengiriman
 
     except requests.exceptions.ConnectionError:
@@ -674,7 +682,7 @@ def main():
        
            
        #print("elapsed :",elapsed)
-       tmp = ambil_data_local_terakhir()
+       #tmp = ambil_data_local_terakhir()
        crt = datetime.now()
        
        #print(str(time.strftime("%M")))
