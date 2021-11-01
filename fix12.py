@@ -593,7 +593,6 @@ def main():
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
-       cek_data_local()
        #get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
