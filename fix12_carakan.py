@@ -159,7 +159,7 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers, timeout=10)
             
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
@@ -212,6 +212,13 @@ def kirim_data(data,img, waktu, tanggal):
     except requests.exceptions.ConnectionError:
         print(r)
         #get_data_durasi()
+    except requests.exceptions.ConnectTimeout:
+        status1 = 1
+        with open('/var/tmp/testing.log', 'a') as fp:
+            img = "data:image/png;base64," #simpan data payload
+            data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+            print( 'Timeout', file=fp)
+
     
 def kirim_data_local_server(data_fix):
     
