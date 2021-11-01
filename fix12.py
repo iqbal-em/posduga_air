@@ -221,10 +221,11 @@ def kirim_data_local_server(data_fix):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         #print(data)
         if data : 
-            data = json.loads(data)
+            '''data = json.loads(data)
             print(data)
             status = str(data['status']) 
             print(status)
+            '''
             with open('/var/tmp/testing.log', 'a') as fp:
                 print('Kirim ulang data local', file=fp) #simpan response pengiriman 
                 print(data, 'done', file=fp) #simpan response pengiriman 
