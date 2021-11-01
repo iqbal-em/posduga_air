@@ -160,7 +160,7 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout = 60)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout = 90)
             
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
@@ -228,7 +228,7 @@ def kirim_data(data,img, waktu, tanggal):
 def kirim_data_local_server(data_fix):
     global status1
     try:
-        r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
+        r = requests.post(url2, data=json.dumps(data_fix), headers=headers, timeout = 90)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         crt_time = dt.datetime.now()
         #print(data)
@@ -288,7 +288,7 @@ def kirim_data_local_server(data_fix):
     except requests.exceptions.ConnectionError:
         print("Gagal mengirimkan Data lokal ke server")
     
-    except requests.exceptions.ConnectTimeout:
+    except requests.exceptions.ReadTimeout:
         status1 = 1
         with open('/var/tmp/testing.log', 'a') as fp:
             print(crt_time,'Timeout', file=fp)
