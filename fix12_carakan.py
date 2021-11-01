@@ -213,15 +213,26 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         #get_data_durasi()
     
-    
 def kirim_data_local_server(data_fix):
     
     try:
         r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
-        data = json.loads(data)
-        status = str(data['status']) 
-        print(status) 
+        if data : 
+            data = json.loads(data)
+            status = str(data['status']) 
+            print(status)
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print('Kirim ulang data local', file=fp) #simpan response pengiriman 
+                print(data, 'done', file=fp) #simpan response pengiriman 
+                 #time.sleep(2)
+        else :
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print('Kirim ulang data local', file=fp) #simpan response pengiriman 
+                print(data, 'done', file=fp) #simpan response pengiriman 
+                 #time.sleep(2)
+       
+         
         r.close()
         print("Response Kirim data Lokal : ", r)
 
@@ -229,11 +240,6 @@ def kirim_data_local_server(data_fix):
 
     except requests.exceptions.ConnectionError:
         print("Gagal mengirimkan Data lokal ke server")
-    
-    with open('/var/tmp/testing.log', 'a') as fp:
-        print('Kirim ulang data local', file=fp) #simpan response pengiriman 
-        print(data, 'done', file=fp) #simpan response pengiriman 
-        #time.sleep(2)
 
 def get_jadwal_pengiriman(device_id,status_siaga,count) :
 
@@ -579,6 +585,7 @@ def main():
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
+       cek_data_local()
        #get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
