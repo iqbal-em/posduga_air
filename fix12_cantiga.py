@@ -159,9 +159,11 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
-        data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout =10)
+            
         print(r)
+        data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
+        print(data)
         if data : 
             data = json.loads(data)
        
@@ -198,7 +200,7 @@ def kirim_data(data,img, waktu, tanggal):
                     print(data_fix, 'done', file=fp)
                 #time.sleep(2)
         else :
-            status1  = 0
+            status1 = 0
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -211,16 +213,25 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         #get_data_durasi()
     
+    except requests.exceptions.ConnectTimeout:
+        status1 = 1
+        with open('/var/tmp/testing.log', 'a') as fp:
+            img = "data:image/png;base64," #simpan data payload
+            data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+            print( 'Timeout', file=fp)
     
 def kirim_data_local_server(data_fix):
     
     try:
         r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
+        #print(data)
         if data : 
-            data = json.loads(data)
+            '''data = json.loads(data)
+            print(data)
             status = str(data['status']) 
             print(status)
+            '''
             with open('/var/tmp/testing.log', 'a') as fp:
                 print('Kirim ulang data local', file=fp) #simpan response pengiriman 
                 print(data, 'done', file=fp) #simpan response pengiriman 
@@ -239,6 +250,17 @@ def kirim_data_local_server(data_fix):
 
     except requests.exceptions.ConnectionError:
         print("Gagal mengirimkan Data lokal ke server")
+    
+    except requests.exceptions.ConnectTimeout:
+        status1 = 1
+        with open('/var/tmp/testing.log', 'a') as fp:
+            img = "data:image/png;base64," #simpan data payload
+            #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+            print('data',file=fp)
+            print( 'Timeout', file=fp)
+    
+    
+    
 
 def get_jadwal_pengiriman(device_id,status_siaga,count) :
 
@@ -307,6 +329,7 @@ def cek_data_local() :
     
     for x in temp_data_local:
         data_fix = {"foto_cam":x[2],"ketinggian_air":x[1],"imei":imei, "waktu":x[3], "tanggal":x[4] }
+        print(data_fix)
         kirim_data_local_server(data_fix)
         ubah_data_local(x[0])
 
@@ -585,7 +608,6 @@ def main():
 
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
-       cek_data_local()
        #get_data_durasi() #cek jadwal pengiriman ketika booting
 
    while True :
@@ -687,6 +709,7 @@ def main():
         #Jika tidak ada maka ambil dari status siaga
        
        
+           
        #print("elapsed :",elapsed)
        #tmp = ambil_data_local_terakhir()
        crt = datetime.now()
