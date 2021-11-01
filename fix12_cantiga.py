@@ -159,7 +159,7 @@ def kirim_data(data,img, waktu, tanggal):
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout =10)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout =60)
             
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
