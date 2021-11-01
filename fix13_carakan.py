@@ -27,14 +27,14 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-tinggi_sensor = 777
+tinggi_sensor = 800
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
 
-siaga1 = 400
-siaga2 = 300
-siaga3 = 199
+siaga1 = 201
+siaga2 = 100
+siaga3 = 70
 
 set_millis = 0
 lvl_siaga1 = 1800000
@@ -44,10 +44,10 @@ lvl_siaga4 = 21600000
 status = 0
 flag_status = 0
 last_flag_status = 0
-imei = "088298203827"
+imei = "088298203828"
 lastupdate_jam = ""
 url = "https://posduga.sysable.io/api/sendjsondata"
-url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203827"
+url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203828"
 url2 = "https://posduga.sysable.io/api/sendjsondata-multiple"
 jadwal_pengiriman = ""
 current_time = ""
@@ -218,7 +218,7 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         #get_data_durasi()
     
-    except requests.exceptions.ReadTimeout:
+    except requests.exceptions.ConnectTimeout:
         status1 = 1
         with open('/var/tmp/testing.log', 'a') as fp:
             img = "data:image/png;base64," #simpan data payload
@@ -616,7 +616,7 @@ def main():
    data_millis = round(int(time.time() * 1000))
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
-   dict = ambil_data_jadwal(2)
+   dict = ambil_data_jadwal(3)
    flag_kirim = 0
    flag_data_kirim = 0
    flag_start = 0
@@ -643,7 +643,7 @@ def main():
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        #get_data_durasi() #cek jadwal pengiriman ketika booting
-   kirim_data_full()
+   #kirim_data_full()
 
    while True :
        current_millis = round(int(time.time() * 1000))
