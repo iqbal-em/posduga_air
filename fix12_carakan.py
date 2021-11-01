@@ -223,7 +223,7 @@ def kirim_data(data,img, waktu, tanggal):
 def kirim_data_local_server(data_fix):
     
     try:
-        r = requests.post(url2, data=json.dumps(data_fix), headers=headers,timeout = 10)
+        r = requests.post(url2, data=json.dumps(data_fix), headers=headers,timeout = 60)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         if data : 
             data = json.loads(data)
