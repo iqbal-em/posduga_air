@@ -643,7 +643,7 @@ def main():
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        #get_data_durasi() #cek jadwal pengiriman ketika booting
-   kirim_data_full()
+   #kirim_data_full()
 
    while True :
        current_millis = round(int(time.time() * 1000))
