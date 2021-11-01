@@ -223,7 +223,7 @@ def kirim_data(data,img, waktu, tanggal):
 def kirim_data_local_server(data_fix):
     
     try:
-        r = requests.post(url2, data=json.dumps(data_fix), headers=headers)
+        r = requests.post(url2, data=json.dumps(data_fix), headers=headers,timeout = 10)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         if data : 
             data = json.loads(data)
@@ -247,6 +247,16 @@ def kirim_data_local_server(data_fix):
 
     except requests.exceptions.ConnectionError:
         print("Gagal mengirimkan Data lokal ke server")
+
+    except requests.exceptions.ConnectTimeout:
+        status1 = 1
+        with open('/var/tmp/testing.log', 'a') as fp:
+            img = "data:image/png;base64," #simpan data payload
+            #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+            print('data',file=fp)
+            print( 'Timeout', file=fp)
+    
+
 
 def get_jadwal_pengiriman(device_id,status_siaga,count) :
 
