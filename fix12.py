@@ -328,7 +328,7 @@ def ambil_data_jadwal(id1) :
     #kirim data lokal
     #tmp_img = 'home/pi/posduga_air/img/%s',temp_waktu
     x = (id1,)
-    query = """SELECT level,waktu_pengiriman FROM jadwal_devices where device_id = %s"""
+    query = """SELECT level,waktu_pengiriman FROM jadwal_devices where device_id = %s order by level,waktu_pengiriman"""
     curs.execute(query,x)
     db.commit()
     print(db)
