@@ -239,7 +239,7 @@ def kirim_data_local_server(data_fix):
             status = str(data['status']) 
             print(data) 
             print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
-            r.close()
+            
             
             if (status == "200"):
                 status_response = 0
@@ -280,6 +280,7 @@ def kirim_data_local_server(data_fix):
                 #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
                 print(crt_time, 'Data Lama Terkirim Tapi Response status data tidak ada', data, file=fp) #simpan response pengiriman 
                     #time.sleep(2)
+        r.close()
         return jadwal_pengiriman
 
 
