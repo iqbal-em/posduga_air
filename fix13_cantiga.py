@@ -252,7 +252,13 @@ def kirim_data_local_server(data_fix):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         crt_time = dt.datetime.now()
         #print(data)
-        if data : 
+        if data[0:6] == "<HTML>" :
+            status1 = 0
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(crt_time, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
+            
+                    #time.sleep(2)
+        elif data : 
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman

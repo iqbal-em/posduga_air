@@ -157,6 +157,7 @@ def kirim_data(data,img, waktu, tanggal):
     print(waktu, tanggal)
     data_tmp = data
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
+    crt_time = dt.datetime.now()
     #print("tes" ,data_fix)
     try:
         r = requests.post(url, data=json.dumps(data_fix), headers=headers)
@@ -164,7 +165,14 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-        if data : 
+        if data[0:6] == "<HTML>" :
+            status1 = 0
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
+            
+                    #time.sleep(2)
+
+        elif data : 
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
@@ -227,6 +235,11 @@ def kirim_data(data,img, waktu, tanggal):
             data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
             print(waktu,'Timeout', file=fp)
     
+    except requests.exceptions.HTTPError as err:
+        with open('/var/tmp/testing.log', 'a') as fp:
+            print(crt_time,'Response error', file=fp)
+            r.close()
+    
 def kirim_data_local_server(data_fix):
     global status1
     try:
@@ -234,7 +247,15 @@ def kirim_data_local_server(data_fix):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         crt_time = dt.datetime.now()
         #print(data)
-        if data : 
+        if data[0:6] == "<HTML>" :
+            status1 = 0
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(crt_time, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
+            
+                    #time.sleep(2)
+
+        elif data : 
+            r.raise_for_status()
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
@@ -284,6 +305,11 @@ def kirim_data_local_server(data_fix):
         r.close()
         return jadwal_pengiriman
 
+
+    except requests.exceptions.HTTPError as err:
+        with open('/var/tmp/testing.log', 'a') as fp:
+            print(crt_time,'Response error', file=fp)
+            r.close()
 
 
 
