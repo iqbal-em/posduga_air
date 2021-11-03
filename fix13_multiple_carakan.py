@@ -27,15 +27,14 @@ ketinggian_air = 0
 last_kalibrasi = 0
 response2 = os.system("sudo -S pigpiod") #menjalankan pigpiod
 
-tinggi_sensor = 777
+tinggi_sensor = 752
 
 #SERIAL_PORT = "/dev/ttyAMA0"  # Raspberry Pi 3
 #SERIAL_PORT = "/dev/ttyS0"    # Raspberry Pi 2
 
-siaga1 = 400
-siaga2 = 300
-siaga3 = 199
-
+siaga1 = 300
+siaga2 = 249
+siaga3 = 119
 set_millis = 0
 lvl_siaga1 = 1800000
 lvl_siaga2 = 3600000
@@ -44,10 +43,10 @@ lvl_siaga4 = 21600000
 status = 0
 flag_status = 0
 last_flag_status = 0
-imei = "088298203827"
+imei = "088298203821"
 lastupdate_jam = ""
 url = "https://posduga.sysable.io/api/sendjsondata"
-url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203827"
+url1 = "https://posduga.sysable.io/api/api-device-by-imei/088298203821"
 url2 = "https://posduga.sysable.io/api/sendjsondata-multiple"
 jadwal_pengiriman = ""
 current_time = ""
@@ -56,6 +55,9 @@ waktu_pengiriman = ""
 status_response = 0
 dict = {}
 status1 = 1
+cctv1 = '192.168.1.64'
+cctv2 = '192.168.1.65'
+cctv3 = '192.168.1.66'
 
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -69,8 +71,7 @@ def setup():
     GPIO.setup(P_BUTTON, GPIO.IN, GPIO.PUD_UP)
 
 
-def check_ping():
-    hostname = "192.168.1.64"
+def check_ping(hostname):
     response = os.system("ping -c 1 " + hostname) #cek cctv
     # and then check the response...
     print("check ping : " + str(response))
@@ -146,9 +147,9 @@ def convertToBinaryData(filename):
         binaryData = file.read()
     return binaryData
 
-def kirim_data(data,img, waktu, tanggal):
+def kirim_data(data,img, waktu, tanggal,cctv):
     global jadwal_pengiriman, status_response, status1
-    if (check_ping() == 0):
+    if (check_ping(cctv) == 0):
         img = "data:image/png;base64," + str(img) 
     else :
         img = " " 
@@ -158,32 +159,21 @@ def kirim_data(data,img, waktu, tanggal):
     print(waktu, tanggal)
     data_tmp = data
     data_fix = {"foto_cam":img,"ketinggian_air":data,"imei":imei, "waktu":waktu, "tanggal":tanggal }
-    crt_time  = dt.datetime.now()
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout = 90)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
             
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-
-        if data[0:6] == "<HTML>" :
-            status1 = 0
-            with open('/var/tmp/testing.log', 'a') as fp:
-                print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
-            
-                    #time.sleep(2)
-
-
-            
-
-        elif data : 
+        if data : 
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
             status = str(data['status']) 
             print(data) 
             print("Jadwal Pengiriman Selanjutnya", jadwal_pengiriman) 
+            
             if (status == "200"):
                 status_response = 0
                 status1 = 0
@@ -229,7 +219,6 @@ def kirim_data(data,img, waktu, tanggal):
     except requests.exceptions.ConnectionError:
         print(r)
         r.close()
-    
         #get_data_durasi()
     
     except requests.exceptions.ReadTimeout:
@@ -239,11 +228,6 @@ def kirim_data(data,img, waktu, tanggal):
             img = "data:image/png;base64," #simpan data payload
             data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
             print(waktu,'Timeout', file=fp)
-    
-    except requests.exceptions.HTTPError as err:
-        with open('/var/tmp/testing.log', 'a') as fp:
-            print(crt_time,'Response error', file=fp)
-            r.close()
     
 def kirim_data_local_server(data_fix):
     global status1
@@ -301,11 +285,8 @@ def kirim_data_local_server(data_fix):
                     #time.sleep(2)
         r.close()
         return jadwal_pengiriman
-    
-    except requests.exceptions.HTTPError as err:
-        with open('/var/tmp/testing.log', 'a') as fp:
-            print(crt_time,'Response error', file=fp)
-            r.close()
+
+
 
 
     except requests.exceptions.ConnectionError:
@@ -344,6 +325,36 @@ def get_jadwal_pengiriman(device_id,status_siaga,count) :
     #minpos = delta.index(min(delta))
     
     return temp_data_local
+
+class cctv :
+    #ip (menginit ip ketika membuat objek)
+    #output ke img[i].png
+    #proses
+    def __init__(self, ip, img):
+      self.ip = ip
+      self.img = img
+    def capture_img(self) :
+        if (check_ping(self.img)): 
+            cam = Client(self.ip, 'admin', 't4ng3r4ng')
+            print("starting picture capture")
+            vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
+            bytes = b''
+            #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
+            with open('img.png', 'wb') as f:
+                for chunk in vid.iter_content(chunk_size=1024):
+                    bytes += chunk
+                    a = bytes.find(b'\xff\xd8')
+                    b = bytes.find(b'\xff\xd9')
+                    if a != -1 and b != -1:
+                        jpg = bytes[a:b+2]
+                        bytes = bytes[b+2:]
+                        i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                        cv2.imwrite('img.png', i)
+                    #cv2.imshow('i', i)
+            else :
+                
+
+      
 
 def ubah_data_local(x) :
     db = MySQLdb.connect("localhost", "admin", "t4ng3r4ng", "posduga_air")
@@ -486,14 +497,58 @@ def kirim_data_full():
     
 
     print("Booting Camera and Modem 4G")
-    if (check_ping() == 0):
+    if (check_ping(cctv1) == 0):
         #time.sleep(2)
-        cam = Client('http://192.168.1.64', 'admin', 't4ng3r4ng')
+        cam = Client(cctv1, 'admin', 't4ng3r4ng')
         print("starting picture capture")
         vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
         bytes = b''
         #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
-        with open('img.png', 'wb') as f:
+        with open('img1.png', 'wb') as f:
+            for chunk in vid.iter_content(chunk_size=1024):
+                bytes += chunk
+                a = bytes.find(b'\xff\xd8')
+                b = bytes.find(b'\xff\xd9')
+                if a != -1 and b != -1:
+                    jpg = bytes[a:b+2]
+                    bytes = bytes[b+2:]
+                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    cv2.imwrite('img.png', i)
+                    #cv2.imshow('i', i)
+
+    else :
+      print("CCTV NOT DETECTED")
+
+    if (check_ping(cctv2) == 0):
+        #time.sleep(2)
+        cam = Client(cctv2, 'admin', 't4ng3r4ng')
+        print("starting picture capture")
+        vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
+        bytes = b''
+        #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
+        with open('img2.png', 'wb') as f:
+            for chunk in vid.iter_content(chunk_size=1024):
+                bytes += chunk
+                a = bytes.find(b'\xff\xd8')
+                b = bytes.find(b'\xff\xd9')
+                if a != -1 and b != -1:
+                    jpg = bytes[a:b+2]
+                    bytes = bytes[b+2:]
+                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    cv2.imwrite('img.png', i)
+                    #cv2.imshow('i', i)
+
+    else :
+      print("CCTV NOT DETECTED")
+    
+    if (check_ping(cctv3) == 0):
+        #time.sleep(2)
+        cam = Client(cctv3, 'admin', 't4ng3r4ng')
+        print("starting picture capture")
+        vid = cam.Streaming.channels[102].picture(method ='get', type = 'opaque_data')
+        bytes = b''
+        #path = "r'C:\Users\Myname\Dropbox\Foldes\image-' + date_string + '.png'"
+        with open('img3.png', 'wb') as f:
             for chunk in vid.iter_content(chunk_size=1024):
                 bytes += chunk
                 a = bytes.find(b'\xff\xd8')
@@ -514,38 +569,36 @@ def kirim_data_full():
     #insert.kirim_data_local(ketinggian_air_fix, path)
     
     hostname = "posduga.sysable.io"
-    if(check_url(hostname) == 0 or check_url(hostname) == 512):
-      if(check_ping()) == 0 :
-          buffer_img = compress_img('img.png')
-          #print("waktu :" + converter_json(current_time))
-          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
-          update_data_db_local(status1)
-          #print("Response :" + response)
-      else :
-          buffer_img = " "
-          insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-          response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
-          update_data_db_local(status1)
-          print(response)
-      #print("Full response" , response.__dict__)
-      #jadwal_pengiriman = response
-    else :
-        if(check_ping()) == 0 :
-            buffer_img = compress_img('img.png')
+    for i in range (1,4):
+        if(check_url(hostname) == 0 or check_url(hostname) == 512):
+      
+          if(check_ping()) == 0 :
+            tmp = 'img' + str(i) + '.png'
+            buffer_img = compress_img('tmp')
             #print("waktu :" + converter_json(current_time))
-          #print("Response :" + response)
+            insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
+            response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+            update_data_db_local(status1)
+            #print("Response :" + response)
+          else :
+            buffer_img = " "
+            insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
+            response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+            update_data_db_local(status1)
+            print(response)
+         #print("Full response" , response.__dict__)
+        #jadwal_pengiriman = response
         else :
-          buffer_img = " "
-        status1  = 1
-        insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-        '''with open('/var/tmp/error.log', 'a') as fp:
-            current_time = time.strftime("%H:%M:%S", t)
-            date = datetime.datetime.now().date()
-            print(date,current_time,"No Internet", file=fp)
-        time.sleep(10)
-        kirim_data_full()
-        '''
+            if(check_ping()) == 0 :
+                tmp = 'img' + str(i) + '.png'
+                buffer_img = compress_img(tmp)
+                #print("waktu :" + converter_json(current_time))
+                #print("Response :" + response)
+            else :
+                buffer_img = " "
+                status1  = 1
+                insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
+        
     
    
     if(check_url(hostname) == 0 or check_url(hostname) == 512):
@@ -641,7 +694,7 @@ def main():
    data_millis = round(int(time.time() * 1000))
    pwm_millis = round(int(time.time() * 1000))
    print("Initiate Kalibrasi Sensor ......")
-   dict = ambil_data_jadwal(2)
+   dict = ambil_data_jadwal(1)
    flag_kirim = 0
    flag_data_kirim = 0
    flag_start = 0
@@ -668,7 +721,7 @@ def main():
    if (check_url(url1) == 0 or check_url(url1) == 512) :
        print("Update Data")
        #get_data_durasi() #cek jadwal pengiriman ketika booting
-   kirim_data_full()
+   #kirim_data_full()
 
    while True :
        current_millis = round(int(time.time() * 1000))
@@ -799,7 +852,7 @@ def main():
                flag_start = 1
                if (col == (len(dict[flag_status])-1)):
                    col = 0
-                   dict = update_dict(dict)
+                   dict = update_dict(dict) 
                else :
                    col = col + 1
                jadwal_pengiriman = dict[flag_status][col]
