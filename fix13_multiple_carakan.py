@@ -330,7 +330,9 @@ class cctv :
     #ip (menginit ip ketika membuat objek)
     #output ke img[i].png
     #proses
+    
     def __init__(self, ip, img):
+      self.crt_time = dt.datetime.now()
       self.ip = ip
       self.img = img
     def capture_img(self) :
@@ -351,8 +353,12 @@ class cctv :
                         i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
                         cv2.imwrite('img.png', i)
                     #cv2.imshow('i', i)
-            else :
-                
+        else :
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(self.crt_time, 'CCTV Error', file=fp) #simpan response pengiriman 
+                    #time.sleep(2)
+    def compress_img(self) :
+
 
       
 
