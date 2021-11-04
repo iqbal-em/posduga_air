@@ -165,7 +165,7 @@ def kirim_data(data,img, waktu, tanggal):
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-        if data[0:6] == "<HTML>" :
+        if data[0:6] == "<html>" :
             status1 = 0
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
@@ -247,7 +247,7 @@ def kirim_data_local_server(data_fix):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         crt_time = dt.datetime.now()
         #print(data)
-        if data[0:6] == "<HTML>" :
+        if data[0:6] == "<html>" :
             status1 = 0
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(crt_time, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
