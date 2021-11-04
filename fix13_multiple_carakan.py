@@ -357,7 +357,7 @@ class cctv :
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(self.crt_time, 'CCTV Error', file=fp) #simpan response pengiriman 
                     #time.sleep(2)
-    def compress_img(self) :
+    #def compress_img(self) :
 
 
       
