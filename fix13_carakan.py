@@ -238,7 +238,34 @@ def kirim_data(data,img, waktu, tanggal):
         with open('/var/tmp/testing.log', 'a') as fp:
             print(crt_time,'Response error', file=fp)
             r.close()
-    
+
+
+def get_data_durasi():
+    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman,tinggi_sensor
+    try : 
+        r =  requests.get(url=url1)
+        data = r.json()
+        tinggi_sensor = int(data['data'][0]['ketinggian_sensor'])
+        print(tinggi_sensor)
+
+        '''
+        siaga1 = data['data'][0]['siaga']['min_siaga_1']
+        siaga2 = data['data'][0]['siaga']['min_siaga_2']
+        siaga3 = data['data'][0]['siaga']['min_siaga_3']
+        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000 
+        lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
+        lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
+        lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
+        siaga3 = data['data'][0]['siaga']['min_siaga_3']
+        '''
+        #jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        #print("jadwal_pengiriman",jadwal_pengiriman)
+        #cek_siaga_init()
+        #kirim_data_full()
+    except requests.exceptions.ConnectionError:
+        
+        print(r)
+
 def kirim_data_local_server(data_fix):
     global status1
     try:
@@ -651,6 +678,9 @@ def main():
    flag = 0
    pi = pigpio.pi()
    time.sleep(1)
+   if (check_url(url1) == 0 or check_url(url1) == 512) :
+       print("Update Data")
+       get_data_durasi()
    for i in range(10):
        p1 = PWM_read(pi, 12 )
        time.sleep(1)
@@ -668,8 +698,7 @@ def main():
    
    
 
-   if (check_url(url1) == 0 or check_url(url1) == 512) :
-       print("Update Data")
+   
        #get_data_durasi() #cek jadwal pengiriman ketika booting
    #kirim_data_full()
 
