@@ -166,7 +166,7 @@ def kirim_data(data,img, waktu, tanggal):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
         if str(r)[0:16] == "<Response [504]>" :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
             
@@ -213,7 +213,7 @@ def kirim_data(data,img, waktu, tanggal):
                 
                 #time.sleep(2)
         else :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -248,7 +248,7 @@ def kirim_data_local_server(data_fix):
         crt_time = dt.datetime.now()
         #print(data)
         if str(r)[0:16] == "<Response [504]>" :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(crt_time, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
             
@@ -296,7 +296,7 @@ def kirim_data_local_server(data_fix):
                 
                 #time.sleep(2)
         else :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }

@@ -168,7 +168,7 @@ def kirim_data(data,img, waktu, tanggal):
         print(data)
 
         if str(r)[0:16] == "<Response [504]>" :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
             
@@ -214,7 +214,7 @@ def kirim_data(data,img, waktu, tanggal):
                 
                 #time.sleep(2)
         else :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -265,7 +265,7 @@ def kirim_data_local_server(data_fix):
             
             if (status == "200"):
                 status_response = 0
-                status1 = 0
+                status1 = 1
                 #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)]
                 #print("Response 500")
                 #kirim_data_full() #jika data kekirim, looping kirim data
@@ -296,7 +296,7 @@ def kirim_data_local_server(data_fix):
                 
                 #time.sleep(2)
         else :
-            status1 = 0
+            status1 = 1
             with open('/var/tmp/testing.log', 'a') as fp:
                 img = "data:image/png;base64," #simpan data payload
                 #data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
