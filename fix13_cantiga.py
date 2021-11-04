@@ -698,7 +698,7 @@ def main():
    
 
    
-   kirim_data_full()
+   #kirim_data_full()
 
    while True :
        current_millis = round(int(time.time() * 1000))
