@@ -1,6 +1,6 @@
 import subprocess
 
-filename = '/home/pi/posduga_air/fix12.py'
+filename = '/home/pi/posduga_air/fix13.py'
 while True:
     """However, you should be careful with the '.wait()'"""
     p = subprocess.Popen('python3 '+filename, shell=True).wait()
