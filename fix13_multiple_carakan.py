@@ -147,6 +147,35 @@ def convertToBinaryData(filename):
         binaryData = file.read()
     return binaryData
 
+
+def get_data_durasi():
+    global siaga1, siaga2, siaga3, siaga4, lvl_siaga1, lvl_siaga2, lvl_siaga3, lvl_siaga4, jadwal_pengiriman,tinggi_sensor
+    try : 
+        r =  requests.get(url=url1)
+        data = r.json()
+        tinggi_sensor = int(data['data'][0]['ketinggian_sensor'])
+        print(tinggi_sensor)
+
+        '''
+        siaga1 = data['data'][0]['siaga']['min_siaga_1']
+        siaga2 = data['data'][0]['siaga']['min_siaga_2']
+        siaga3 = data['data'][0]['siaga']['min_siaga_3']
+        lvl_siaga1 = (data['data'][0]['siaga']['durasi_siaga_1'])*1000 
+        lvl_siaga2 = (data['data'][0]['siaga']['durasi_siaga_2'])*1000
+        lvl_siaga3 = (data['data'][0]['siaga']['durasi_siaga_3'])*1000
+        lvl_siaga4 = (data['data'][0]['siaga']['durasi_siaga_4'])*1000
+        siaga3 = data['data'][0]['siaga']['min_siaga_3']
+        '''
+        #jadwal_pengiriman = data['last_update'] #Pengambilan jadwal berikutnya ketika booting script
+        #print("jadwal_pengiriman",jadwal_pengiriman)
+        #cek_siaga_init()
+        #kirim_data_full()
+    except requests.exceptions.ConnectionError:
+        
+        print(r)     
+        
+    
+
 def kirim_data(data,img, waktu, tanggal,cctv):
     global jadwal_pengiriman, status_response, status1
     if (check_ping(cctv) == 0):
@@ -166,7 +195,15 @@ def kirim_data(data,img, waktu, tanggal,cctv):
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         print(data)
-        if data : 
+
+        if str(r)[0:16] == "<Response [504]>" :
+            status1 = 0
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(waktu, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
+            
+                    #time.sleep(2
+
+        elif data : 
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
@@ -236,7 +273,13 @@ def kirim_data_local_server(data_fix):
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
         crt_time = dt.datetime.now()
         #print(data)
-        if data : 
+        if str(r)[0:16] == "<Response [504]>" :
+            status1 = 0
+            with open('/var/tmp/testing.log', 'a') as fp:
+                print(crt_time, '504 Gateway Timeout', data, file=fp) #simpan response pengiriman 
+            
+                    #time.sleep(2
+        elif data : 
             data = json.loads(data)
        
             #jadwal_pengiriman = jadwal_pengiriman[11:len(jadwal_pengiriman)] #pengambilan data next_schedulu di dict jadwal pengiriman
