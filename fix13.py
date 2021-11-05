@@ -833,7 +833,7 @@ def main():
            
        #print(jadwal_pengiriman)
            if ((current_time == str(jadwal_pengiriman.time()) and flag == 0) or (elapsed < timedelta(minutes=1,seconds = 30) and flag == 0) ) :
-               
+               kirim_data_full()
                print("Saatnya Data dikirim")
                
                flag_start = 1
@@ -844,7 +844,7 @@ def main():
                    col = col + 1
                jadwal_pengiriman = dict[flag_status][col]
                flag = 1
-               kirim_data_full()
+               
            else :
                flag = 0
            
