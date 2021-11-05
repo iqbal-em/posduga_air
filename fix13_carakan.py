@@ -784,6 +784,18 @@ def main():
                       last_flag_status = flag_status 
                   col = pengecekan_jadwal(dict,flag_status)
                   jadwal_pengiriman = dict[flag_status][col]
+
+          elif (flag_status != last_flag_status and last_ketinggian_air != 0 and last_flag_status !=0 and flag_status > last_flag_status):
+              inc = inc + 1 
+              if (inc > 4):
+                  with open('/var/tmp/testing.log', 'a') as fp:
+                      print("Status :",flag_status, ' Kenaikan Status', file=fp)
+                      #time.sleep(1)
+                      print("perubahan status")
+                      #kirim_data_full()
+                      last_flag_status = flag_status 
+                  col = pengecekan_jadwal(dict,flag_status)
+                  jadwal_pengiriman = dict[flag_status][col]
           
            
 
