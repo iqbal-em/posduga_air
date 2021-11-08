@@ -161,7 +161,7 @@ def kirim_data(data,img, waktu, tanggal):
     crt_time  = dt.datetime.now()
     #print("tes" ,data_fix)
     try:
-        r = requests.post(url, data=json.dumps(data_fix), headers=headers,timeout = 90)
+        r = requests.post(url, data=json.dumps(data_fix), headers=headers)
             
         print(r)
         data = r.__dict__['_content'] #pengambilan data jadwal selanjutnya
@@ -224,14 +224,12 @@ def kirim_data(data,img, waktu, tanggal):
         return jadwal_pengiriman
 
     except requests.exceptions.ConnectionError:
-        print(r)
-        r.close()
-    
-        #get_data_durasi()
+        print("Gagal mengirimkan Data lokal ke server")
+        #r.close()
     
     except requests.exceptions.ReadTimeout:
         status1 = 1
-        r.close()
+        #r.close()
         with open('/var/tmp/testing.log', 'a') as fp:
             img = "data:image/png;base64," #simpan data payload
             data_fix = {"foto_cam":img,"ketinggian_air":data_tmp,"imei":imei, "waktu":waktu, "tanggal":tanggal }
@@ -240,7 +238,7 @@ def kirim_data(data,img, waktu, tanggal):
     except requests.exceptions.HTTPError as err:
         with open('/var/tmp/testing.log', 'a') as fp:
             print(crt_time,'Response error', file=fp)
-            r.close()
+            #r.close()
     
 def kirim_data_local_server(data_fix):
     global status1
@@ -308,15 +306,15 @@ def kirim_data_local_server(data_fix):
     except requests.exceptions.HTTPError as err:
         with open('/var/tmp/testing.log', 'a') as fp:
             print(crt_time,'Response error', file=fp)
-            r.close()
+            #r.close()
 
 
     except requests.exceptions.ConnectionError:
         print("Gagal mengirimkan Data lokal ke server")
-        r.close()
+        #r.close()
     
     except requests.exceptions.ReadTimeout:
-        r.close()
+        #r.close()
         status1 = 1
         with open('/var/tmp/testing.log', 'a') as fp:
             print(crt_time,'Timeout', file=fp)
