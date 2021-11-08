@@ -3,6 +3,7 @@
 from __future__ import print_function 
 import time, sys
 import cv2
+from numpy.core.arrayprint import DatetimeFormat
 import pigpio # http://abyz.co.uk/rpi/pigpio/python.html
 import mysql.connector
 import datetime as dt
@@ -269,11 +270,6 @@ def kirim_data_img(img, waktu, tanggal,jadwal, ip):
 
 def kirim_data_sensor(data,imei, waktu, tanggal):
     global jadwal_pengiriman, status_response, status1
-    if (check_ping() == 0):
-        img = "data:image/png;base64," + str(img) 
-    else :
-        img = " " 
-    #data=json.dumps
     waktu = "" + str(waktu) 
     tanggal = "" + str(tanggal)
     print(waktu, tanggal)
@@ -719,20 +715,24 @@ def kirim_data_full():
       
           if(check_ping()) == 0 :
             tmp = 'img' + str(i) + '.png'
+            ip = '192.168.1.'+ str(63 + i)
             buffer_img = compress_img('tmp')
             #print("waktu :" + converter_json(current_time))
             insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-            response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+            response = kirim_data_img(buffer_img,imei, current_time, date, jadwal_pengiriman, ip)
+           
             update_data_db_local(status1)
             #print("Response :" + response)
           else :
             buffer_img = " "
             insert.kirim_data_local(date,current_time , ketinggian_air_fix, buffer_img,status1,waktu_pengiriman,imei)
-            response = kirim_data(ketinggian_air_fix,buffer_img,current_time, date)
+            response = kirim_data_img(buffer_img,imei, current_time, date, jadwal_pengiriman, ip)
             update_data_db_local(status1)
             print(response)
-         #print("Full response" , response.__dict__)
-        #jadwal_pengiriman = response
+          
+          if i == 3 :
+              response = kirim_data_sensor(ketinggian_air, imei, current_time, date)
+  
         else :
             if(check_ping()) == 0 :
                 tmp = 'img' + str(i) + '.png'
