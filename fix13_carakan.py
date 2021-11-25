@@ -84,7 +84,7 @@ def check_ping():
 def check_url(hostname):
     response = os.system("ping -c 1 " + hostname) #cek_koneksi_internet
     print("response url :" + str(response))
-    if response == 0 or response == 512:
+    if response == 0 :
         pingstatus = "Terkoneksi Ke Internet"
         #print("Terkoneksi ke Internet")
     else:
@@ -544,7 +544,7 @@ def kirim_data_full():
     #insert.kirim_data_local(ketinggian_air_fix, path)
     
     hostname = "posduga.sysable.io"
-    if(check_url(hostname) == 0 or check_url(hostname) == 512):
+    if(check_url(hostname) == 0 ):
       if(check_ping()) == 0 :
           buffer_img = compress_img('img.png')
           #print("waktu :" + converter_json(current_time))
@@ -561,7 +561,7 @@ def kirim_data_full():
       #print("Full response" , response.__dict__)
       #jadwal_pengiriman = response
     else :
-        if(check_ping()) == 0 :
+        if(check_ping() == 0) :
             buffer_img = compress_img('img.png')
             #print("waktu :" + converter_json(current_time))
           #print("Response :" + response)
@@ -578,7 +578,7 @@ def kirim_data_full():
         '''
     
    
-    if(check_url(hostname) == 0 or check_url(hostname) == 512):
+    if(check_url(hostname) == 0 ):
         cek_data_local()
 
 def cek_siaga_init():
@@ -678,7 +678,7 @@ def main():
    flag = 0
    pi = pigpio.pi()
    time.sleep(1)
-   if (check_url(url1) == 0 or check_url(url1) == 512) :
+   if (check_url(url1) == 0) :
        print("Update Data")
        get_data_durasi()
    for i in range(10):
